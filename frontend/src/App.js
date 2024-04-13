@@ -1,6 +1,8 @@
 import './App.css';
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
+import { FaHome, FaUser, FaEnvelope, FaPlus, FaSignInAlt } from 'react-icons/fa';
+
 
 import Browse from './Browse';
 import Profile from './Profile';
@@ -55,8 +57,8 @@ function App() {
               <input {...register("password", { required: true })} type="password" className="form-control" id="password" placeholder="Password" />
               {errors.password && <p className="text-danger">Password is required</p>}
             </div>
-            <button type="submit">Sign In</button>
           </form>
+          <button type="submit">Sign In</button>
           <button className="close-btn" onClick={toggleSignInPopup}>Close</button>
           <button className="close-btn" onClick={toggleSignUpPopup}>Sign Up</button>
 
@@ -65,7 +67,7 @@ function App() {
   }
 
   function SignUp() {
-      const [profileImage, setProfileImage] = useState(null);
+    const [profileImage, setProfileImage] = useState(null);
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const onCreateAccount = data => {
@@ -99,7 +101,7 @@ function App() {
             {/* Form fields */}
             <div className="col-md-12">
               <label htmlFor="profilePicture" className="form-label">Profile Picture</label>
-              <input {...register("profilePicture")} type="file" accept="image/*" className="form-control" id="profilePicture" onChange={handleProfileImageChange}/>
+              <input {...register("profilePicture")} type="file" accept="image/*" className="form-control" id="profilePicture" onChange={handleProfileImageChange} />
               {profileImage && <img src={profileImage} alt="Profile" className="profile-preview" />}
             </div>
             <div className="col-md-6">
@@ -123,10 +125,12 @@ function App() {
               {errors.password && <p className="text-danger">Password must be at least 6 characters long and contain at least one letter and one number</p>}
             </div>
             <button type="submit">Create Account</button>
+            <button className="close-btn" onClick={toggleSignInPopup}>Back</button>
           </form>
-          <button className="close-btn" onClick={toggleSignInPopup}>Back</button>
         </div>
-      </div>);
+      </div>
+
+    );
   }
 
   function Header() {
@@ -136,24 +140,32 @@ function App() {
           <img src="logo.png" alt="MarketPal Logo" />
         </div>
         <nav className="navbar">
-          <button className="nav-link" onClick={toggleSignInPopup}>Sign In</button>
-          <button className={activePage === 'browse' ? 'active' : ''} onClick={() => handlePageChange('browse')}>Browse</button>
-          <button className={activePage === 'profile' ? 'active' : ''} onClick={() => handlePageChange('profile')}>Profile</button>
-          <button className={activePage === 'messages' ? 'active' : ''} onClick={() => handlePageChange('messages')}>Messages</button>
-          <button className={activePage === 'create_post' ? 'active' : ''} onClick={() => handlePageChange('create_post')}>Create Post</button>
+          <button type="button" className="nav-link" onClick={toggleSignInPopup}>
+            <FaSignInAlt /> Sign In
+          </button>
+          <button className={activePage === 'browse' ? 'active' : ''} onClick={() => handlePageChange('browse')}>
+            <FaHome /> Browse
+          </button>
+          <button className={activePage === 'profile' ? 'active' : ''} onClick={() => handlePageChange('profile')}>
+            <FaUser /> Profile
+          </button>
+          <button className={activePage === 'messages' ? 'active' : ''} onClick={() => handlePageChange('messages')}>
+            <FaEnvelope /> Messages
+          </button>
+          <button className={activePage === 'create_post' ? 'active' : ''} onClick={() => handlePageChange('create_post')}>
+            <FaPlus /> Create Post
+          </button>
         </nav>
-
-        {(signInPopup) && <SignIn />}
-        {(signUpPopup) && <SignUp />}
       </header>
-
-
     );
   }
 
   return (
     <div className="App">
       <Header />
+
+      {(signInPopup) && <SignIn />}
+      {(signUpPopup) && <SignUp />}
       {(activePage === 'browse') && <Browse />}
       {(activePage === 'profile') && <Profile />}
       {(activePage === 'messages') && <Messages />}

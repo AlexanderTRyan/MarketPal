@@ -47,7 +47,7 @@ function App() {
             {/* Form fields */}
             <div className="col-md-6">
               <label htmlFor="email" className="form-label">Email</label>
-              <input {...register("email", { required: true})} type="email" className="form-control" id="email" placeholder="Email" />
+              <input {...register("email", { required: true })} type="email" className="form-control" id="email" placeholder="Email" />
               {errors.email && <p className="text-danger">Email is required.</p>}
             </div>
             <div className="col-md-6">
@@ -65,6 +65,7 @@ function App() {
   }
 
   function SignUp() {
+      const [profileImage, setProfileImage] = useState(null);
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const onCreateAccount = data => {
@@ -79,12 +80,28 @@ function App() {
       return passwordRegex.test(value);
     };
 
+    const handleProfileImageChange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          setProfileImage(reader.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
     return (
       <div className="popup">
         <div className="popup-content">
           {/* Sign-up form */}
           <form onSubmit={handleSubmit(onCreateAccount)} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* Form fields */}
+            <div className="col-md-12">
+              <label htmlFor="profilePicture" className="form-label">Profile Picture</label>
+              <input {...register("profilePicture")} type="file" accept="image/*" className="form-control" id="profilePicture" onChange={handleProfileImageChange}/>
+              {profileImage && <img src={profileImage} alt="Profile" className="profile-preview" />}
+            </div>
             <div className="col-md-6">
               <label htmlFor="fullName" className="form-label">Full Name</label>
               <input {...register("fullName", { required: true })} type="text" className="form-control" id="fullName" placeholder="Full Name" />

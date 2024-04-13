@@ -48,3 +48,10 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 9999; /* Adjust the z-index to ensure it appears above other content */
 }
+
+.profile-preview {
+  width: 100px; /* Adjust the width as needed */
+  height: 100px; /* Adjust the height as needed */
+  border-radius: 50%; /* Make it appear as a circle */
+  object-fit: cover; /* Maintain aspect ratio and cover the container */
+}

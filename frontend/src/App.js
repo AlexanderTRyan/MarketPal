@@ -137,7 +137,7 @@ function App() {
     return (
       <header className="header">
         <div className="logo">
-          <img src="logo.png" alt="MarketPal Logo" />
+          <img src="./logo.png" alt="MarketPal Logo" style={{ width: '40px', height: 'auto' }} />
         </div>
         <nav className="navbar">
           <button type="button" className="nav-link" onClick={toggleSignInPopup}>

@@ -1,3 +1,4 @@
+/* General styles */
 .App {
   text-align: center;
 }
@@ -13,6 +14,7 @@
   }
 }
 
+/* Header styles */
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -37,6 +39,7 @@
   }
 }
 
+/* Popup styles */
 .popup {
   position: fixed;
   top: 50%;
@@ -49,6 +52,7 @@
   z-index: 9999; /* Adjust the z-index to ensure it appears above other content */
 }
 
+/* Profile picture preview */
 .profile-preview {
   width: 100px; /* Adjust the width as needed */
   height: 100px; /* Adjust the height as needed */
@@ -56,6 +60,7 @@
   object-fit: cover; /* Maintain aspect ratio and cover the container */
 }
 
+/* Header styles */
 .header {
   display: flex;
   align-items: center;
@@ -67,4 +72,19 @@
 
 .logo {
   margin-right: 20px;
+}
+
+/* Footer styles */
+.footer {
+  background-color: #333;
+  color: white;
+  padding: 20px;
+}
+
+.footer h4 {
+  color: white;
+}
+
+.footer p {
+  margin-bottom: 5px;
 }

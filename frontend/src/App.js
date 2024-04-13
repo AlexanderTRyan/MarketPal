@@ -17,6 +17,8 @@ function App() {
   const [signUpPopup, setSignUpPopup] = useState(false);
 
   const handlePageChange = (page) => {
+    setSignInPopup(false);
+    setSignUpPopup(false);
     setActivePage(page);
   };
 
@@ -161,6 +163,26 @@ function App() {
     );
   }
 
+  function Footer() {
+    return (
+      <footer className="footer">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-6">
+              <h4>About Us</h4>
+              <p>Place some information about your website or company here.</p>
+            </div>
+            <div className="col-md-6">
+              <h4>Contact Us</h4>
+              <p>Email: example@example.com</p>
+              <p>Phone: +1234567890</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <div className="App">
       <Header />
@@ -171,6 +193,7 @@ function App() {
       {(activePage === 'profile') && <Profile />}
       {(activePage === 'messages') && <Messages />}
       {(activePage === 'create_post') && <CreatePost />}
+      <Footer />
 
     </div>
   );

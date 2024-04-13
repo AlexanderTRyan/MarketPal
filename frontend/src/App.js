@@ -57,10 +57,11 @@ function App() {
               <input {...register("password", { required: true })} type="password" className="form-control" id="password" placeholder="Password" />
               {errors.password && <p className="text-danger">Password is required</p>}
             </div>
-          </form>
           <button type="submit">Sign In</button>
           <button className="close-btn" onClick={toggleSignInPopup}>Close</button>
           <button className="close-btn" onClick={toggleSignUpPopup}>Sign Up</button>
+          </form>
+
 
         </div>
       </div>);

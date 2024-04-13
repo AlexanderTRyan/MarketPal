@@ -34,15 +34,6 @@ MarketPal/
 ├── public/
 │ ├── index.html
 │ └── ...
-│
-└── screenshots/
-├── browse.png
-├── profile.png
-├── messages.png
-└── create_post.png
-
-bash
-Copy code
 
 ## Getting Started
 

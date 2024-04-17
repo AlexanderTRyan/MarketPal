@@ -39,6 +39,30 @@ app.get("/profile/:id", async (req, res) => {
 });
 
 
+app.get("/login", async (req, res) => {
+    await client.connect();
+
+    const newLogin = {
+        "email": req.body.email,
+        "password": req.body.password
+    };
+
+    //console.log(newLogin);
+
+    const results = await db.collection("login")
+        .findOne(newLogin);    
+
+    if (!results) {
+        res.send("failed").status(404);
+    } else {
+        const query = { "id": Number(results.id) };
+        const profile = await db.collection("profiles")
+            .findOne(query);
+        res.send(profile).status(200);
+    }
+});
+
+
 // Old examples for how to get and post
 // app.get("/listRobots", async (req, res) => {
 //     await client.connect();

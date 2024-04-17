@@ -1,0 +1,17 @@
+[
+    {
+       "email": "Robot1@email.com",
+       "password": "123",
+       "id": "1"
+    },
+    {
+        "email": "Robot2@email.com",
+        "password": "123",
+        "id": "2"
+     },
+     {
+        "email": "Robot3@email.com",
+        "password": "123",
+        "id": "3"
+     }
+]

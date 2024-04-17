@@ -88,3 +88,117 @@
 .footer p {
   margin-bottom: 5px;
 }
+
+
+.titleInput{
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  height: 40px;
+  width: 250px;
+}
+
+.titleInput::placeholder{
+  position: absolute; 
+  left: 10px;
+}
+
+.descriptionInput{
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  height: 100px;
+  width: 250px;
+  padding: 10px;
+}
+
+.descriptionInput::placeholder {
+  position: absolute; 
+  top: 0;
+  left: 10px; 
+
+}
+
+.select-container {
+  position: relative;
+}
+
+.select-container select {
+  width: 250px; 
+  height: 50px; 
+  padding: 10px; 
+  margin-top: 10px;
+  margin-bottom: 10px; 
+  border: 1px solid #ccc; 
+  border-radius: 5px; 
+  font-size: 16px; 
+  background-color: #fff; 
+  color: #333; 
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+
+}
+
+.select-container select:focus {
+  outline: none; 
+}
+
+.select-container::after {
+  content: '\25BC'; 
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none; 
+  color: #666; 
+ 
+}
+
+.select-container select option {
+  padding: 10px; /* Add padding for spacing */
+  background-color: #f0f0f0; /* Set background color for options */
+  color: #333; /* Set text color for options */
+  font-size: 14px; /* Set font size for options */
+}
+
+.select-container select option:hover {
+  background-color: #d50202; /* Set background color for options on hover */
+}
+
+.Item-preview{
+  width: 80px; /* Adjust the width as needed */
+  height: 80px; /* Adjust the height as needed */
+  border-radius: 5%; /* Make it appear as a circle */
+  object-fit: cover; /* Maintain aspect ratio and cover the container */
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  margin: 10px;
+}
+
+.custom-file-button {
+  display: flex;
+  align-items: center;
+  height: 100px;
+  width: 100px;
+  margin: 10px;
+  background-color: #cdd4da; /* Button background color */
+  color: #fff; /* Button text color */
+  padding: 10px 20px; /* Button padding */
+  border: none; /* Remove button border */
+  border-radius: 5px; /* Button border radius */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.custom-file-button:hover {
+  background-color: #0056b3; /* Change background color on hover */
+}
+
+.hidden{
+  display: none;
+}

@@ -1,0 +1,23 @@
+[
+    {
+       "id": 1,
+       "fullName": "Robot 1",
+       "email": "Thisisemail.email.com",
+       "address": "This is address of Robot 1",
+       "image": ""
+    },
+    {
+        "id": 2,
+        "fullName": "Robot 2",
+        "email": "Thisisemail.email.com",
+        "address": "This is address of Robot 2",
+        "image": ""
+     },
+     {
+        "id": 3,
+        "fullName": "Robot 3",
+        "email": "Thisisemail.email.com",
+        "address": "This is address of Robot 3",
+        "image": ""
+     }
+]

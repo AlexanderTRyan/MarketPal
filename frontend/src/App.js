@@ -193,6 +193,7 @@ function App() {
       {(activePage === 'profile') && <Profile />}
       {(activePage === 'messages') && <Messages />}
       {(activePage === 'create_post') && <CreatePost />}
+      
       <Footer />
 
     </div>

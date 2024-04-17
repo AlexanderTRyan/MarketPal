@@ -38,7 +38,8 @@ app.get("/profile/:id", async (req, res) => {
     else res.send(results).status(200);
 });
 
-
+// Login method that returns failed if no login, 
+// and the profile of the corresponding person if they succeed
 app.get("/login", async (req, res) => {
     await client.connect();
 
@@ -50,7 +51,7 @@ app.get("/login", async (req, res) => {
     //console.log(newLogin);
 
     const results = await db.collection("login")
-        .findOne(newLogin);    
+        .findOne(newLogin);
 
     if (!results) {
         res.send("failed").status(404);
@@ -62,6 +63,71 @@ app.get("/login", async (req, res) => {
     }
 });
 
+//POST method for signing up to the website
+// adds the new user to both the profile and login pages
+app.post("/signup", async (req, res) => {
+    try {
+        await client.connect();
+
+        // Check if the email already exists in the profiles collection
+        const existingProfile = await db.collection("profiles").findOne({ email: req.body.email });
+        if (existingProfile) {
+            return res.status(400).send({ error: "Email already exists" });
+        } else {
+
+            // Find the highest ID currently in the profiles table
+            const query = {};
+            const profiles = await db
+                .collection("profiles")
+                .find(query)
+                .toArray();
+
+            let maxId = 0;
+            profiles.forEach(profile => {
+                if (profile.id > maxId) {
+                    maxId = profile.id;
+                }
+            });
+
+            // Generate a new unique ID
+            const newId = maxId + 1;
+
+            const newProfile = {
+                "id": newId,
+                "fullName": req.body.fullName,
+                "email": req.body.email,
+                "address": req.body.address,
+                "image": req.body.image
+            };
+            const newLogin = {
+                "email": req.body.email,
+                "password": req.body.password,
+                "id": newId
+            }
+            console.log(newProfile);
+            console.log(newLogin);
+
+            const ProfileResult = await db
+                .collection("profiles")
+                .insertOne(newProfile);
+
+            const loginResult = await db
+                .collection("login")
+                .insertOne(newLogin);
+
+            
+            // Respond with success message
+            res.status(200).send({
+                message: "User signed up successfully",
+                profile: ProfileResult,
+                login: loginResult
+            });
+        }
+    } catch (error) {
+        console.error("An error occurred:", error);
+        res.status(500).send({ error: 'An internal server error occurred' });
+    }
+});
 
 // Old examples for how to get and post
 // app.get("/listRobots", async (req, res) => {

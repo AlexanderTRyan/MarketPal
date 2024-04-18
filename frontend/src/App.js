@@ -9,6 +9,34 @@ import Profile from './Profile';
 import Messages from './Messages';
 import CreatePost from './CreatePost';
 
+const URL = 'http://localhost:8081';
+
+function callServer(method, extention, requestBody, handleResponse) {
+  fetch(`${URL}/${extention}`, {
+      method: method,
+      headers: {
+          'content-type': 'application/json'
+      },
+      body: requestBody ? JSON.stringify(requestBody) : null
+  })
+  .then(response => {
+      if (response.status !== 200) {
+          throw new Error('Network response was not ok');
+      }
+      return response.json();
+  })
+  .then(data => {
+      // Call the provided response handling function
+      handleResponse(data);
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
+}
+
+function login(profile) {
+  console.log(profile);
+} 
 
 function App() {
 
@@ -38,6 +66,9 @@ function App() {
 
     const onSignIn = data => {
       console.log(data); // log all data
+      console.log('login/' + data.email +'/' + data.password);
+      let test = callServer('GET', 'login/' + data.email +'/'+ data.password, null, login);
+      console.log(test);
       // update hooks
       setSignInPopup(false);
 

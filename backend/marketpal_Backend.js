@@ -40,12 +40,12 @@ app.get("/profile/:id", async (req, res) => {
 
 // Login method that returns failed if no login, 
 // and the profile of the corresponding person if they succeed
-app.get("/login", async (req, res) => {
+app.get("/login/:email/:password", async (req, res) => {
     await client.connect();
 
     const newLogin = {
-        "email": req.body.email,
-        "password": req.body.password
+        "email": req.params.email,
+        "password": req.params.password
     };
 
     //console.log(newLogin);

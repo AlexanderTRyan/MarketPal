@@ -65,14 +65,14 @@ app.get("/login", async (req, res) => {
 
 //POST method for signing up to the website
 // adds the new user to both the profile and login pages
-app.post("/signup", async (req, res) => {
+app.post("/profile", async (req, res) => {
     try {
         await client.connect();
 
         // Check if the email already exists in the profiles collection
         const existingProfile = await db.collection("profiles").findOne({ email: req.body.email });
         if (existingProfile) {
-            return res.status(400).send({ error: "Email already exists" });
+            return res.status(400).send({ message: "Email already exists" });
         } else {
 
             // Find the highest ID currently in the profiles table
@@ -125,9 +125,32 @@ app.post("/signup", async (req, res) => {
         }
     } catch (error) {
         console.error("An error occurred:", error);
-        res.status(500).send({ error: 'An internal server error occurred' });
+        res.status(500).send({ message: 'An internal server error occurred' });
     }
 });
+
+app.delete("/profile/:id", async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            await client.connect();
+            console.log("Robot to delete :", id);
+            const query = { id: id };
+            // delete
+            const profileDeleted = await db.collection("profiles").deleteOne(query);
+
+            const loginDeleted = await db.collection("login").deleteOne(query);
+
+            res.status(200).send({
+                message: "User Deleted successfully",
+                profile: profileDeleted,
+                login: loginDeleted
+            });
+        }
+        catch (error) {
+            console.error("Error deleting robot:", error);
+            res.status(500).send({ message: 'Internal Server Error' });
+        }
+    });
 
 // Old examples for how to get and post
 // app.get("/listRobots", async (req, res) => {
@@ -184,4 +207,58 @@ app.post("/signup", async (req, res) => {
 //         console.error("An error occurred:", error);
 //         res.status(500).send({ error: 'An internal server error occurred' });
 //     }
+// });
+
+// app.delete("/deleteRobot/:id", async (req, res) => {
+//     try {
+//         const id = Number(req.params.id);
+//         await client.connect();
+//         console.log("Robot to delete :", id);
+//         const query = { id: id };
+//         // delete
+//         const robotDeleted = await db.collection("robot").findOne(query);
+//         res.send(robotDeleted);
+
+//         const results = await db.collection("robot").deleteOne(query);
+//         res.status(200);
+//         //res.send(results);
+//     }
+//     catch (error) {
+//         console.error("Error deleting robot:", error);
+//         res.status(500).send({ message: 'Internal Server Error' });
+//     }
+// });
+
+// app.put("/updateRobot/:id", async (req, res) => {
+//     const id = Number(req.params.id);
+//     const query = { id: id };
+//     await client.connect();
+//     console.log("Robot to Update :", id);
+//     // Data for updating the document, typically comes from the request body
+//     console.log(req.body);
+
+//     // read data from robot to update to send to frontend
+//     const robotUpdated = await db.collection("robot").findOne(query);
+
+//     res.send(robotUpdated);
+//     const updateData = {
+//         $set: {
+//             "name": req.body.name,
+//             "price": req.body.price,
+//             "description": req.body.description,
+//             "imageUrl": req.body.imageUrl
+//         }
+//     };
+//     // Add options if needed, for example { upsert: true } to create a document if it doesn't exist
+//     const options = {};
+//     const results = await db.collection("robot").updateOne(query, updateData, options);
+
+//     // If no document was found to update, you can choose to handle it by sending a 404 response
+//     if (results.matchedCount === 0) {
+//         return res.status(404).send({ message: 'Robot not found' });
+//     }
+
+
+//     res.status(200);
+//     //res.send(results);
 // });

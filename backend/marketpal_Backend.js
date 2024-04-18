@@ -115,7 +115,7 @@ app.post("/profile", async (req, res) => {
                 .collection("login")
                 .insertOne(newLogin);
 
-            
+
             // Respond with success message
             res.status(200).send({
                 message: "User signed up successfully",
@@ -129,30 +129,77 @@ app.post("/profile", async (req, res) => {
     }
 });
 
+//Delete Profile function that deleted the profile and login based on the id value in the URL
 app.delete("/profile/:id", async (req, res) => {
-        try {
-            const id = Number(req.params.id);
-            await client.connect();
-            console.log("Robot to delete :", id);
-            const query = { id: id };
-            // delete
-            const profileDeleted = await db.collection("profiles").deleteOne(query);
+    try {
+        const id = Number(req.params.id);
+        await client.connect();
+        console.log("Profile to delete :", id);
+        const query = { id: id };
+        // delete
+        const profileDeleted = await db.collection("profiles").deleteOne(query);
 
-            const loginDeleted = await db.collection("login").deleteOne(query);
+        const loginDeleted = await db.collection("login").deleteOne(query);
 
-            res.status(200).send({
-                message: "User Deleted successfully",
-                profile: profileDeleted,
-                login: loginDeleted
-            });
+        res.status(200).send({
+            message: "User Deleted successfully",
+            profile: profileDeleted,
+            login: loginDeleted
+        });
+    }
+    catch (error) {
+        console.error("Error deleting robot:", error);
+        res.status(500).send({ message: 'Internal Server Error' });
+    }
+});
+
+
+//PUT method that update a profile in the profiles database and a login in the login database based on the id
+app.put("/profile/:id", async (req, res) => {
+    const id = Number(req.params.id);
+    const query = { id: id };
+    await client.connect();
+    console.log("profile to Update :", id);
+    // Data for updating the document, typically comes from the request body
+    console.log(req.body);
+
+    const updateProfile = {
+        $set: {      
+            "id": id,
+            "fullName": req.body.fullName,
+            "email": req.body.email,
+            "address": req.body.address,
+            "image": req.body.image
         }
-        catch (error) {
-            console.error("Error deleting robot:", error);
-            res.status(500).send({ message: 'Internal Server Error' });
+    };
+    const updateLogin = {
+        $set: {
+            "email": req.body.email,
+            "password": req.body.password,
+            "id": id
         }
-    });
+    }
+    // Add options if needed, for example { upsert: true } to create a document if it doesn't exist
+    const options = {};
+    const profileResults = await db.collection("profiles").updateOne(query, updateProfile, options);
+    const loginResults = await db.collection("login").updateOne(query, updateLogin, options);
 
-// Old examples for how to get and post
+    // If no document was found to update, you can choose to handle it by sending a 404 response
+    if (profileResults.matchedCount === 0) {
+        return res.status(404).send({ message: 'Profile not found' });
+    }
+    if (loginResults.matchedCount === 0) {
+        return res.status(404).send({ message: 'Login not found' });
+    }
+    
+    const profileUpdated = await db.collection("profiles").findOne(query);
+
+
+    res.status(200);
+    res.send(profileUpdated);
+});
+
+// Old examples for how to get post, put and delete
 // app.get("/listRobots", async (req, res) => {
 //     await client.connect();
 //     console.log("Node connected successfully to GET MongoDB");

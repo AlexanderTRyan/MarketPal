@@ -199,6 +199,20 @@ app.put("/profile/:id", async (req, res) => {
     res.send(profileUpdated);
 });
 
+app.get("/listPosts", async (req, res) => {
+    await client.connect();
+    console.log("Node connected successfully to GET MongoDB");
+    const query = {};
+    const results = await db
+        .collection("Posts")
+        .find(query)
+        .limit(100)
+        .toArray();
+    console.log(results);
+    res.status(200);
+    res.send(results);
+});
+
 // Old examples for how to get post, put and delete
 // app.get("/listRobots", async (req, res) => {
 //     await client.connect();

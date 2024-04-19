@@ -9,6 +9,38 @@ import Profile from './Profile';
 import Messages from './Messages';
 import CreatePost from './CreatePost';
 
+const URL = 'http://localhost:8081';
+
+let userProfile = null;
+
+function callServer(method, extention, requestBody, handleResponse) {
+  fetch(`${URL}/${extention}`, {
+      method: method,
+      headers: {
+          'content-type': 'application/json'
+      },
+      body: requestBody ? JSON.stringify(requestBody) : null
+  })
+  .then(response => {
+      if (response.status !== 200) {
+          throw new Error('Network response was not ok');
+      }
+      return response.json();
+  })
+  .then(data => {
+      // Call the provided response handling function
+      handleResponse(data);
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
+}
+
+function login(profile) {
+  userProfile = profile;
+  console.log(userProfile);
+
+} 
 
 function App() {
 
@@ -38,6 +70,8 @@ function App() {
 
     const onSignIn = data => {
       console.log(data); // log all data
+      console.log('login/' + data.email +'/' + data.password);
+      callServer('GET', 'login/' + data.email +'/'+ data.password, null, login);
       // update hooks
       setSignInPopup(false);
 
@@ -190,9 +224,10 @@ function App() {
       {(signInPopup) && <SignIn />}
       {(signUpPopup) && <SignUp />}
       {(activePage === 'browse') && <Browse />}
-      {(activePage === 'profile') && <Profile />}
+      {(activePage === 'profile') && <Profile userProfile={userProfile}/>}
       {(activePage === 'messages') && <Messages />}
       {(activePage === 'create_post') && <CreatePost />}
+      
       <Footer />
 
     </div>

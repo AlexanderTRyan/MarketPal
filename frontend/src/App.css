@@ -1,6 +1,7 @@
 /* General styles */
 .App {
   text-align: center;
+
 }
 
 .App-logo {
@@ -24,6 +25,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+
 }
 
 .App-link {
@@ -34,6 +36,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -49,22 +52,28 @@
   padding: 20px;
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  z-index: 9999; /* Adjust the z-index to ensure it appears above other content */
+  z-index: 9999;
+  /* Adjust the z-index to ensure it appears above other content */
 }
 
 /* Profile picture preview */
 .profile-preview {
-  width: 100px; /* Adjust the width as needed */
-  height: 100px; /* Adjust the height as needed */
-  border-radius: 50%; /* Make it appear as a circle */
-  object-fit: cover; /* Maintain aspect ratio and cover the container */
+  width: 100px;
+  /* Adjust the width as needed */
+  height: 100px;
+  /* Adjust the height as needed */
+  border-radius: 50%;
+  /* Make it appear as a circle */
+  object-fit: cover;
+  /* Maintain aspect ratio and cover the container */
 }
 
 /* Header styles */
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* To evenly space the logo and nav links */
+  justify-content: space-between;
+  /* To evenly space the logo and nav links */
   background-color: #333;
   color: white;
   padding: 10px;
@@ -90,7 +99,7 @@
 }
 
 
-.titleInput{
+.titleInput {
   display: flex;
   align-items: center;
   margin-left: 10px;
@@ -100,12 +109,12 @@
   width: 300px;
 }
 
-.titleInput::placeholder{
-  position: absolute; 
+.titleInput::placeholder {
+  position: absolute;
   left: 10px;
 }
 
-.descriptionInput{
+.descriptionInput {
   display: flex;
   align-items: center;
   margin-left: 10px;
@@ -118,9 +127,9 @@
 }
 
 .descriptionInput::placeholder {
-  position: absolute; 
+  position: absolute;
   top: 0;
-  left: 10px; 
+  left: 10px;
 
 }
 
@@ -129,16 +138,16 @@
 }
 
 .select-container select {
-  width: 300px; 
-  height: 50px; 
-  padding: 10px; 
+  width: 300px;
+  height: 50px;
+  padding: 10px;
   margin-top: 10px;
-  margin-bottom: 10px; 
-  border: 1px solid #ccc; 
-  border-radius: 5px; 
-  font-size: 16px; 
-  background-color: #fff; 
-  color: #333; 
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #333;
   display: flex;
   align-items: center;
   margin-left: 10px;
@@ -146,30 +155,41 @@
 }
 
 .select-container select:focus {
-  outline: none; 
+  outline: none;
 }
 
 
 .select-container select option {
-  padding: 10px; /* Add padding for spacing */
-  background-color: #f0f0f0; /* Set background color for options */
-  color: #333; /* Set text color for options */
-  font-size: 14px; /* Set font size for options */
+  padding: 10px;
+  /* Add padding for spacing */
+  background-color: #f0f0f0;
+  /* Set background color for options */
+  color: #333;
+  /* Set text color for options */
+  font-size: 14px;
+  /* Set font size for options */
 }
 
 .select-container select option:hover {
-  background-color: #d50202; /* Set background color for options on hover */
+  background-color: #d50202;
+  /* Set background color for options on hover */
 }
 
-.Item-preview{
-  width: 80px; /* Adjust the width as needed */
-  height: 80px; /* Adjust the height as needed */
-  border-radius: 5%; /* Make it appear as a circle */
-  object-fit: cover; /* Maintain aspect ratio and cover the container */
+.Item-preview {
+  width: 80px;
+  /* Adjust the width as needed */
+  height: 80px;
+  /* Adjust the height as needed */
+  border-radius: 5%;
+  /* Make it appear as a circle */
+  object-fit: cover;
+  /* Maintain aspect ratio and cover the container */
   display: flex;
   align-items: center;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  /* Add a subtle shadow */
   margin: 10px;
+  margin-top: 20px;
 }
 
 .custom-file-button {
@@ -177,117 +197,147 @@
   align-items: center;
   height: 100px;
   width: 125px;
-  margin: 10px;
-  background-color: #cdd4da; /* Button background color */
-  color:black; /* Button text color */
-  padding: 10px 20px; /* Button padding */
-  border: none; /* Remove button border */
-  border-radius: 5px; /* Button border radius */
-  cursor: pointer; /* Change cursor to pointer on hover */
+  margin-top: 20px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  background-color: #cdd4da;
+  /* Button background color */
+  color: black;
+  /* Button text color */
+  padding: 10px 20px;
+  /* Button padding */
+  border: none;
+  /* Remove button border */
+  border-radius: 5px;
+  /* Button border radius */
+  cursor: pointer;
+  /* Change cursor to pointer on hover */
   border: solid black 1px;
 }
 
 .custom-file-button:hover {
-  background-color: #0056b3; /* Change background color on hover */
+  background-color: #0056b3;
+  /* Change background color on hover */
 }
 
-.hidden{
+.hidden {
   display: none;
 }
 
 .imageGrid {
-  display: grid; /* Use CSS grid layout */
-  grid-template-columns: repeat(2, minmax(200px, 1fr)); /* Auto-fit columns with minimum width of 200px */
+  display: grid;
+  /* Use CSS grid layout */
+  grid-template-columns: repeat(2, minmax(200px, 1fr));
+  /* Auto-fit columns with minimum width of 200px */
 
 }
 
 .Item-preview {
-  width: 125px; 
+  width: 125px;
   height: 100px;
   border: solid black 1px;
 }
 
 .Create-Post {
   display: grid;
-  grid-template-columns: 1fr 4fr; /* Adjust column widths as needed */
-  grid-gap: 20px; /* Adjust the gap between sections as needed */
+  grid-template-columns: 1fr 4fr;
+  /* Adjust column widths as needed */
+  grid-gap: 20px;
+  /* Adjust the gap between sections as needed */
 }
 
-.preview-img{
-  width: 100%; 
+.preview-img {
+  width: 100%;
   height: 100%;
 }
 
 
-.background-mid{
-  
+.background-mid {
+  margin-top: 20px;
   display: flex;
-  justify-content: center; /* Horizontally center the content */
-  border-left: solid; /* Remove button border */
-  border-radius: 5px; /* Button border radius */
-  height: 900px;
+  justify-content: center;
+  /* Horizontally center the content */
+  border-left: solid;
+  /* Remove button border */
+  border-bottom: solid;
+  border-top: solid;
+  border-radius: 5px;
+  /* Button border radius */
+  height: 800px;
   width: 100%;
   background-color: #F0F2F5;
 }
 
-.preview-div{
+.preview-div {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Adjust column widths as needed */
+  grid-template-columns: 1fr 1fr;
+  /* Adjust column widths as needed */
   resize: none;
-  border: solid; /* Remove button border */
-  border-radius: 5px; /* Button border radius */
-  height: 800px;
+  border: solid;
+  /* Remove button border */
+  border-radius: 5px;
+  /* Button border radius */
+  height: 700px;
   width: 750px;
   background-color: #FFFF;
   margin: 50px;
 }
 
 
-.preview-header{
+.preview-header {
   display: flex;
-  align-items: left; /* Horizontally center the content */
+  align-items: left;
+  /* Horizontally center the content */
   margin: 10px;
 }
 
-.img-preview-div{
-  border: solid; /* Remove button border */
-  border-radius: 5px; /* Button border radius */
-  align-items: left; /* Horizontally center the content */
+.img-preview-div {
+  border: solid;
+  /* Remove button border */
+  border-radius: 5px;
+  /* Button border radius */
+  align-items: left;
+  /* Horizontally center the content */
   margin-left: 10px;
   margin-top: 150px;
   width: 80%;
   height: 40%;
- 
+
 }
 
 
-.preview-info{
-  border-left: solid; /* Remove button border */
-  border-radius: 5px; /* Button border radius */
+.preview-info {
+  border-left: solid;
+  /* Remove button border */
+  border-radius: 5px;
+  /* Button border radius */
   resize: none;
 }
 
-.preview-info-h1{
+.preview-info-h1 {
   display: flex;
-  align-items: left; /* Horizontally center the content */
+  align-items: left;
+  /* Horizontally center the content */
   margin: 10px;
 }
 
-.preview-info-h3{
+.preview-info-h3 {
   display: flex;
-  align-items: left; /* Horizontally center the content */
+  align-items: left;
+  /* Horizontally center the content */
   margin: 10px;
 }
 
 
-.preview-info-category{
+.preview-info-category {
   font-size: 15px;
 }
 
 .preview-info {
   font-family: Arial, sans-serif;
-  color: #333; 
-  max-width: 400px; /* Adjust the maximum width as needed */
+  color: #333;
+  max-width: 400px;
+  /* Adjust the maximum width as needed */
   word-break: break-word;
   white-space: pre-line;
 
@@ -315,31 +365,159 @@
   background-color: transparent;
   border: none;
   color: #333;
-  font-size: 36px; /* Adjust size as needed */
+  font-size: 36px;
+  /* Adjust size as needed */
   cursor: pointer;
-  padding: 10px; /* Adjust padding as needed */
+  padding: 10px;
+  /* Adjust padding as needed */
 }
 
 .arrow-button:hover {
-  color: #007bff; /* Change color on hover if desired */
+  color: #007bff;
+  /* Change color on hover if desired */
 }
 
-.img-arrow1{
+.img-arrow1 {
   margin: 10px;
   margin-right: 40px;
 }
 
-.img-arrow2{
+.img-arrow2 {
   margin: 10px;
   transform: rotate(180deg);
   margin-left: 40px;
 }
 
-.publish-button{
+.publish-button {
   color: white;
   background-color: #1877f2;
   width: 115px;
   border-radius: 10%;
   height: 40px;
 
+}
+
+
+
+
+/*BROWSE SCREEN CSS*/
+
+.Browse {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  /* Adjust column widths as needed */
+  grid-gap: 20px;
+  /* Adjust the gap between sections as needed */
+}
+
+.left-section-browse {
+  border: solid black 5px;
+  margin: 20px;
+}
+
+.middle-section-browse {
+  border: solid black 5px;
+  height: 800px;
+  margin: 20px;
+}
+
+
+.browse-title h1 {
+  text-transform: capitalize;
+
+}
+
+
+.browse-title h1 span {
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  line-height: 3em;
+  padding-left: 0.25em;
+  color: rgba(0, 0, 0, 0.4);
+  padding-bottom: 10px;
+
+}
+
+
+h1 {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  font-family: "Raleway", sans-serif;
+  font-weight: 300;
+  font-size: 40px;
+  color: #080808;
+  -webkit-transition: all 0.4s ease 0s;
+  -o-transition: all 0.4s ease 0s;
+  transition: all 0.4s ease 0s;
+}
+
+h1 span {
+  display: block;
+  font-size: 0.5em;
+  line-height: 1.3;
+}
+
+h1 em {
+  font-style: normal;
+  font-weight: 600;
+}
+
+
+.search-bar {
+  width: 300px;
+  border-radius: 10px;
+  height: 40px;
+  outline: none;
+  margin-bottom: 20px;
+}
+
+
+.category-buttons {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  justify-content: flex-start; /* Align items to the start */
+  margin: 10px;
+  margin-top: 10px;
+  color: black;
+  border: none;
+  width: 300px;
+  height: 45px;
+  border-radius: 10px;
+  background-color: white;
+  border: solid #F0F2F5;
+  position: relative;
+}
+
+.category-buttons:hover {
+  background-color: #F0F2F5; /* Change background color on hover */
+}
+
+.category-buttons img {
+  flex-shrink: 0; /* Prevent the image from shrinking */
+  margin-right: 10px; /* Add some space between the image and text */
+  width: 35px;
+  height: 35px;
+}
+
+.category-buttons span {
+  overflow: hidden; /* Hide overflowing text */
+  text-overflow: ellipsis; /* Add ellipsis (...) for overflowing text */
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.category-buttons-div{
+  margin: 20px;
+  height: 600px; /* Set a fixed height for the div */
+  overflow-y: auto; /* Enable vertical scrollbar */
+}
+
+.category-buttons-header{
+  display: flex;
+  justify-content: left;
+  font-family: "Raleway", sans-serif;
+  font-weight: 300;
+  font-size: 25px;
 }

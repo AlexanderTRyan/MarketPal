@@ -1,7 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { useForm } from "react-hook-form";
-import { FaHome, FaUser, FaEnvelope, FaPlus, FaSignInAlt } from 'react-icons/fa';
+
 function CreatePost() {
 
   const [itemImages, setItemImages] = useState([]);
@@ -137,7 +136,6 @@ function CreatePost() {
             <option value="Tools">Tools & Home Improvement</option>
             <option value="Toys">Toys & Games</option>
             <option value="Travel">Travel & Luggage</option>
-            <option value="VideoGames"> Video Games & Consoles</option>
             <option value="Miscellenous">Miscellenous</option>
           </select>
         </div>

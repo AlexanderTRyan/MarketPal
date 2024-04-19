@@ -114,6 +114,7 @@
   height: 150px;
   width: 300px;
   padding: 10px;
+
 }
 
 .descriptionInput::placeholder {
@@ -178,11 +179,12 @@
   width: 125px;
   margin: 10px;
   background-color: #cdd4da; /* Button background color */
-  color: #fff; /* Button text color */
+  color:black; /* Button text color */
   padding: 10px 20px; /* Button padding */
   border: none; /* Remove button border */
   border-radius: 5px; /* Button border radius */
   cursor: pointer; /* Change cursor to pointer on hover */
+  border: solid black 1px;
 }
 
 .custom-file-button:hover {
@@ -201,7 +203,8 @@
 
 .Item-preview {
   width: 125px; 
-  height: 100px; 
+  height: 100px;
+  border: solid black 1px;
 }
 
 .Create-Post {
@@ -220,7 +223,7 @@
   
   display: flex;
   justify-content: center; /* Horizontally center the content */
-  border: solid; /* Remove button border */
+  border-left: solid; /* Remove button border */
   border-radius: 5px; /* Button border radius */
   height: 900px;
   width: 100%;
@@ -230,7 +233,7 @@
 .preview-div{
   display: grid;
   grid-template-columns: 1fr 1fr; /* Adjust column widths as needed */
-
+  resize: none;
   border: solid; /* Remove button border */
   border-radius: 5px; /* Button border radius */
   height: 800px;
@@ -257,6 +260,86 @@
  
 }
 
-.category-text{
+
+.preview-info{
+  border-left: solid; /* Remove button border */
+  border-radius: 5px; /* Button border radius */
+  resize: none;
+}
+
+.preview-info-h1{
+  display: flex;
+  align-items: left; /* Horizontally center the content */
+  margin: 10px;
+}
+
+.preview-info-h3{
+  display: flex;
+  align-items: left; /* Horizontally center the content */
+  margin: 10px;
+}
+
+
+.preview-info-category{
   font-size: 15px;
+}
+
+.preview-info {
+  font-family: Arial, sans-serif;
+  color: #333; 
+  max-width: 400px; /* Adjust the maximum width as needed */
+  word-break: break-word;
+  white-space: pre-line;
+
+}
+
+.preview-info-h1 {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.preview-info-h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.preview-info p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.arrow-button {
+  background-color: transparent;
+  border: none;
+  color: #333;
+  font-size: 36px; /* Adjust size as needed */
+  cursor: pointer;
+  padding: 10px; /* Adjust padding as needed */
+}
+
+.arrow-button:hover {
+  color: #007bff; /* Change color on hover if desired */
+}
+
+.img-arrow1{
+  margin: 10px;
+  margin-right: 40px;
+}
+
+.img-arrow2{
+  margin: 10px;
+  transform: rotate(180deg);
+  margin-left: 40px;
+}
+
+.publish-button{
+  color: white;
+  background-color: #1877f2;
+  width: 115px;
+  border-radius: 10%;
+  height: 40px;
+
 }

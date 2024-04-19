@@ -23,6 +23,7 @@ function CreatePost() {
 
   };
 
+
   const handleAddPhotoClick = () => {
     // Trigger the file input click event
     fileInputRef.current.click();
@@ -102,13 +103,15 @@ function CreatePost() {
 
         <div>
           <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 titleInput"
-            type="number" placeholder="Title" onChange={handleTitle}/>
+            type="text" placeholder="Title" onChange={handleTitle} />
 
           <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 titleInput"
-            type="text" placeholder="Price" onChange={handlePrice}/>
+            type="number" placeholder="Price" onChange={handlePrice} />
 
-          <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 descriptionInput"
-            type="text" placeholder="Description" onChange={handleDescription}/>
+
+          <textarea className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 px-4 resize-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 descriptionInput"
+            placeholder="Description" onChange={handleDescription}></textarea>
+
         </div>
 
         <div className="select-container">
@@ -143,9 +146,9 @@ function CreatePost() {
           <select id="dropdownInput" name="dropdownInput" onChange={handleCondition}>
             <option value="" disabled selected hidden>Condition</option>
             <option value="New">New</option>
-            <option value="UsedLikeNew">Used-Like New</option>
-            <option value="UsedGood">Used-Good</option>
-            <option value="UsedFair">Used-Fair</option>
+            <option value="Used-Like New">Used-Like New</option>
+            <option value="Used-Good">Used-Good</option>
+            <option value="Used-Fair">Used-Fair</option>
           </select>
         </div>
       </div>
@@ -162,19 +165,26 @@ function CreatePost() {
                   <img src={itemImages[imgIndex]} alt={`Image 1`} className="preview-img" />
                 )}
                 <div>
-                  <button className="left-button" onClick={switchLeft}>Left</button>
-                  <button className="right-button" onClick={switchRight}>Right</button>
+                  <img src="https://img.icons8.com/?size=48&id=9NUOGb9gL5Wb&format=gif" alt="Left Arrow" onClick={switchLeft} className='img-arrow1' />
+                  <img src='https://img.icons8.com/?size=48&id=9NUOGb9gL5Wb&format=gif' alt="Right Arrow" onClick={switchRight} className='img-arrow2'/>
                 </div>
               </div>
             </div>
 
-            <div>
-              <h2>{title}</h2>
-              <h3>Price: ${price.toLocaleString()}</h3>
-              <h3>Category: <span className="category-text">{category.toString()}</span> </h3>
-              <h3>Condition: {condition}</h3>
-              <p>{description}</p>
+            <div className="preview-info">
+              <div className="preview-info-content">
+                <h2 className='preview-info-h1'>{title}</h2>
+                <h4 className='preview-info-h3'>${price.toLocaleString()}</h4>
+                <h3 className='preview-info-h3'>Condition:     {condition}</h3>
+                <p className='preview-info-h3'>Description: {description}</p>
+                <hr />
 
+                <h3 className='preview-info-h3'>Seller Information:</h3>
+
+                <button className='publish-button'>Publish</button>
+
+
+              </div>
             </div>
 
           </div>

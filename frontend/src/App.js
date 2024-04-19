@@ -10,7 +10,7 @@ import Messages from './Messages';
 import CreatePost from './CreatePost';
 
 const URL = 'http://localhost:8081';
-
+// const URL = "mongodb+srv://seth2proctor:jCca68lIMh4zPFcV@marketpal.bs8kcp1.mongodb.net/?retryWrites=true&w=majority&appName=MarketPal";
 let userProfile = null;
 
 function callServer(method, extention, requestBody, handleResponse) {

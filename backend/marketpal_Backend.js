@@ -213,6 +213,32 @@ app.get("/listPosts", async (req, res) => {
     res.send(results);
 });
 
+app.post("/addPost", async (req, res) => {
+        try {
+            await client.connect();
+            const keys = Object.keys(req.body);
+    
+            const newPost = {
+                "title": req.body.title, // also "name": req.body.name,
+                "price": req.body.price, // also "price": req.body.price,
+                "description": req.body.description, // also "description": req.body.description,
+                "category": req.body.category,
+                "condition": req.body.condition,
+                "imageUrl": req.body.imageUrl
+            };
+            console.log(newPost);
+    
+            const results = await db
+                .collection("Posts")
+                .insertOne(newPost);
+            res.status(200).send(results);
+            
+        } catch (error) {
+            console.error("An error occurred:", error);
+            res.status(500).send({ error: 'An internal server error occurred' });
+        }
+    });
+
 // Old examples for how to get post, put and delete
 // app.get("/listRobots", async (req, res) => {
 //     await client.connect();

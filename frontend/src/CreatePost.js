@@ -33,8 +33,6 @@ function CreatePost() {
     if (currIndex != 0) {
       setImageIndex(--currIndex)
     }
-
-    console.log(currIndex);
   }
 
   const switchRight = () => {
@@ -42,9 +40,6 @@ function CreatePost() {
     if (itemImages.length - 1 > currIndex) {
       setImageIndex(++currIndex)
     }
-
-    console.log(itemImages.length)
-    console.log(currIndex);
   }
 
   const handleTitle = (e) => {
@@ -71,6 +66,23 @@ function CreatePost() {
     const Condition = e.target.value;
     setCondition(Condition);
   }
+
+  function addNewPost() {
+    fetch('http://localhost:8081/addPost', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(
+            {
+              "title": title, 
+              "price": price, 
+              "description": description, 
+              "category": category,
+              "condition": condition,
+              "imageUrl": itemImages
+            }
+        )
+    }).then(response => response.json()).then(data => { alert('Post Added successfuly'); });
+}
 
 
 
@@ -179,7 +191,7 @@ function CreatePost() {
 
                 <h3 className='preview-info-h3'>Seller Information:</h3>
 
-                <button className='publish-button'>Publish</button>
+                <button className='publish-button' onClick={(addNewPost)}>Publish</button>
 
 
               </div>

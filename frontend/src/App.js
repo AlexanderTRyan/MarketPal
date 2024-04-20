@@ -48,7 +48,17 @@ function App() {
     setActivePage('browse');
   }
 
-
+  const handleDeleteProfile = () => {
+    callServer('DELETE', 'profile/' + userProfile.id, null, (res) => {
+      if (res.message === 'User Deleted successfully') {
+        alert('Profile Deleted');
+        setActivePage('browse');
+        setUserProfile(null);
+      } else {
+        alert('Server Error Try Again Later')
+      }
+    })
+  }
 
   function login(profile) {
     if (profile.message == 'Login failed') {
@@ -74,9 +84,13 @@ function App() {
   }
 
   const handlePageChange = (page) => {
-    setSignInPopup(false);
-    setSignUpPopup(false);
-    setActivePage(page);
+    if (userProfile == null && page != 'browse') {
+      setSignInPopup(true);
+    } else {
+      setSignInPopup(false);
+      setSignUpPopup(false);
+      setActivePage(page);
+    }
   };
 
   const toggleSignInPopup = () => {
@@ -103,6 +117,7 @@ function App() {
     return (
       <div className="popup">
         <div className="popup-content">
+          <h2>Sign In</h2>
           {/* Sign-in form */}
           <form onSubmit={handleSubmit(onSignIn)} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* Form fields */}
@@ -132,6 +147,7 @@ function App() {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const onCreateAccount = data => {
+      data.profilePicture = profileImage;
       console.log(data); // log all data
       callServer('POST', "profile", data, accountCreated);
 
@@ -156,6 +172,7 @@ function App() {
     return (
       <div className="popup">
         <div className="popup-content">
+          <h2>Create an Account</h2>
           {/* Sign-up form */}
           <form onSubmit={handleSubmit(onCreateAccount)} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* Form fields */}
@@ -252,12 +269,12 @@ function App() {
 
   return (
     <div className="App">
-      <Header userProfile={userProfile} handleSignOut={handleSignOut}/>
+      <Header userProfile={userProfile} handleSignOut={handleSignOut} />
 
       {(signInPopup) && <SignIn />}
       {(signUpPopup) && <SignUp />}
       {(activePage === 'browse') && <Browse />}
-      {(activePage === 'profile') && <Profile userProfile={userProfile} />}
+      {(activePage === 'profile') && <Profile userProfile={userProfile} onDeleteProfile={handleDeleteProfile} />}
       {(activePage === 'messages') && <Messages />}
       {(activePage === 'create_post') && <CreatePost />}
 

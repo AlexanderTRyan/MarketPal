@@ -15,38 +15,44 @@ let userProfile = null;
 
 function callServer(method, extention, requestBody, handleResponse) {
   fetch(`${URL}/${extention}`, {
-      method: method,
-      headers: {
-          'content-type': 'application/json'
-      },
-      body: requestBody ? JSON.stringify(requestBody) : null
+    method: method,
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: requestBody ? JSON.stringify(requestBody) : null
   })
-  .then(response => {
+    .then(response => {
       if (response.status !== 200) {
-          throw new Error('Network response was not ok');
+        throw new Error('Network response was not ok');
       }
       return response.json();
-  })
-  .then(data => {
+    })
+    .then(data => {
       // Call the provided response handling function
       handleResponse(data);
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       console.error('Error:', error);
-  });
+    });
 }
-
-function login(profile) {
-  userProfile = profile;
-  console.log(userProfile);
-
-} 
 
 function App() {
 
   const [activePage, setActivePage] = useState('browse');
   const [signInPopup, setSignInPopup] = useState(false);
   const [signUpPopup, setSignUpPopup] = useState(false);
+  const [loginError, setLoginError] = useState('');
+
+
+  
+function login(profile) {
+  if (profile.message == 'Login failed') {
+    setLoginError('Login failed. Please try again.');
+  } else {
+    userProfile = profile;
+    console.log(userProfile);
+  }
+}
 
   const handlePageChange = (page) => {
     setSignInPopup(false);
@@ -57,6 +63,7 @@ function App() {
   const toggleSignInPopup = () => {
     setSignUpPopup(false);
     setSignInPopup(!signInPopup);
+    setLoginError(''); // Reset login error message
   };
 
   const toggleSignUpPopup = () => {
@@ -70,11 +77,8 @@ function App() {
 
     const onSignIn = data => {
       console.log(data); // log all data
-      console.log('login/' + data.email +'/' + data.password);
-      callServer('GET', 'login/' + data.email +'/'+ data.password, null, login);
+      callServer('GET', 'login/' + data.email + '/' + data.password, null, login);
       // update hooks
-      setSignInPopup(false);
-
     }
 
     return (
@@ -83,19 +87,20 @@ function App() {
           {/* Sign-in form */}
           <form onSubmit={handleSubmit(onSignIn)} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* Form fields */}
-            <div className="col-md-6">
+            <div className="col-md-12">
               <label htmlFor="email" className="form-label">Email</label>
               <input {...register("email", { required: true })} type="email" className="form-control" id="email" placeholder="Email" />
               {errors.email && <p className="text-danger">Email is required.</p>}
             </div>
-            <div className="col-md-6">
+            <div className="col-md-12">
               <label htmlFor="Password" className="form-label">Password</label>
               <input {...register("password", { required: true })} type="password" className="form-control" id="password" placeholder="Password" />
               {errors.password && <p className="text-danger">Password is required</p>}
             </div>
-          <button type="submit">Sign In</button>
-          <button className="close-btn" onClick={toggleSignInPopup}>Close</button>
-          <button className="close-btn" onClick={toggleSignUpPopup}>Sign Up</button>
+            {loginError && <p className="text-danger">{loginError}</p>}
+            <button type="submit">Sign In</button>
+            <button className="close-btn" onClick={toggleSignInPopup}>Close</button>
+            <button className="close-btn" onClick={toggleSignUpPopup}>Sign Up</button>
           </form>
 
 
@@ -141,22 +146,22 @@ function App() {
               <input {...register("profilePicture")} type="file" accept="image/*" className="form-control" id="profilePicture" onChange={handleProfileImageChange} />
               {profileImage && <img src={profileImage} alt="Profile" className="profile-preview" />}
             </div>
-            <div className="col-md-6">
+            <div className="col-md-12">
               <label htmlFor="fullName" className="form-label">Full Name</label>
               <input {...register("fullName", { required: true })} type="text" className="form-control" id="fullName" placeholder="Full Name" />
               {errors.fullName && <p className="text-danger">Full Name is required.</p>}
             </div>
-            <div className="col-md-6">
+            <div className="col-md-12">
               <label htmlFor="email" className="form-label">Email</label>
               <input {...register("email", { required: true, pattern: /^\S+@\S+$/i })} type="email" className="form-control" id="email" placeholder="Email" />
               {errors.email && <p className="text-danger">Email is required.</p>}
             </div>
-            <div className="col-md-6">
+            <div className="col-md-12">
               <label htmlFor="address" className="form-label">Address</label>
               <input {...register("address", { required: true })} type="text" className="form-control" id="address" placeholder="Address" />
               {errors.address && <p className="text-danger">Address is required.</p>}
             </div>
-            <div className="col-md-6">
+            <div className="col-md-12">
               <label htmlFor="Password" className="form-label">Password</label>
               <input {...register("password", { required: true, validate: validatePassword })} type="password" className="form-control" id="password" placeholder="Password" />
               {errors.password && <p className="text-danger">Password must be at least 6 characters long and contain at least one letter and one number</p>}
@@ -224,10 +229,10 @@ function App() {
       {(signInPopup) && <SignIn />}
       {(signUpPopup) && <SignUp />}
       {(activePage === 'browse') && <Browse />}
-      {(activePage === 'profile') && <Profile userProfile={userProfile}/>}
+      {(activePage === 'profile') && <Profile userProfile={userProfile} />}
       {(activePage === 'messages') && <Messages />}
       {(activePage === 'create_post') && <CreatePost />}
-      
+
       <Footer />
 
     </div>

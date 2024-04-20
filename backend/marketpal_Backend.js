@@ -54,7 +54,10 @@ app.get("/login/:email/:password", async (req, res) => {
         .findOne(newLogin);
 
     if (!results) {
-        res.send("failed").status(404);
+        const failedLogin = {
+            "message": "Login failed"
+        };
+        res.send(failedLogin).status(404);
     } else {
         const query = { "id": Number(results.id) };
         const profile = await db.collection("profiles")

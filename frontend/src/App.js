@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
-import { FaHome, FaUser, FaEnvelope, FaPlus, FaSignInAlt } from 'react-icons/fa';
+import { FaHome, FaUser, FaEnvelope, FaPlus, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 
 
 import Browse from './Browse';
@@ -11,7 +11,6 @@ import CreatePost from './CreatePost';
 
 const URL = 'http://localhost:8081';
 
-let userProfile = null;
 
 function callServer(method, extention, requestBody, handleResponse) {
   fetch(`${URL}/${extention}`, {
@@ -42,17 +41,37 @@ function App() {
   const [signInPopup, setSignInPopup] = useState(false);
   const [signUpPopup, setSignUpPopup] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const [userProfile, setUserProfile] = useState(null);
 
-
-  
-function login(profile) {
-  if (profile.message == 'Login failed') {
-    setLoginError('Login failed. Please try again.');
-  } else {
-    userProfile = profile;
-    console.log(userProfile);
+  function handleSignOut() {
+    setUserProfile(null);
+    setActivePage('browse');
   }
-}
+
+
+
+  function login(profile) {
+    if (profile.message == 'Login failed') {
+      setLoginError('Login failed. Please try again.');
+    } else {
+      setUserProfile(profile);
+      toggleSignInPopup();
+      console.log(userProfile);
+    }
+  }
+
+  function accountCreated(res) {
+    console.log("Account created: ");
+    console.log(res);
+    if (res.message === 'User signed up successfully') {
+      alert('Sign up successful!');
+      setSignUpPopup(false);
+    } else if (res.message === 'Email already exists') {
+      alert('Account with this email already exists!');
+    } else {
+      alert('Sign up failed. Please Try again');
+    }
+  }
 
   const handlePageChange = (page) => {
     setSignInPopup(false);
@@ -114,8 +133,7 @@ function login(profile) {
 
     const onCreateAccount = data => {
       console.log(data); // log all data
-      // update hooks
-      setSignUpPopup(false);
+      callServer('POST', "profile", data, accountCreated);
 
     }
 
@@ -175,15 +193,25 @@ function login(profile) {
     );
   }
 
-  function Header() {
+  function Header({ userProfile, handleSignOut }) {
+    const isSignedIn = userProfile !== null;
+
+    const handleSignInOut = () => {
+      if (isSignedIn) {
+        handleSignOut();
+      } else {
+        toggleSignInPopup();
+      }
+    }
+
     return (
       <header className="header">
         <div className="logo">
           <img src="./logo.png" alt="MarketPal Logo" style={{ width: '40px', height: 'auto' }} />
         </div>
         <nav className="navbar">
-          <button type="button" className="nav-link" onClick={toggleSignInPopup}>
-            <FaSignInAlt /> Sign In
+          <button type="button" className="nav-link" onClick={handleSignInOut}>
+            {isSignedIn ? <FaSignInAlt /> : <FaSignOutAlt />} {isSignedIn ? 'Sign Out' : 'Sign In'}
           </button>
           <button className={activePage === 'browse' ? 'active' : ''} onClick={() => handlePageChange('browse')}>
             <FaHome /> Browse
@@ -224,7 +252,7 @@ function login(profile) {
 
   return (
     <div className="App">
-      <Header />
+      <Header userProfile={userProfile} handleSignOut={handleSignOut}/>
 
       {(signInPopup) && <SignIn />}
       {(signUpPopup) && <SignUp />}

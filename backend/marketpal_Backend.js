@@ -75,7 +75,7 @@ app.post("/profile", async (req, res) => {
         // Check if the email already exists in the profiles collection
         const existingProfile = await db.collection("profiles").findOne({ email: req.body.email });
         if (existingProfile) {
-            return res.status(400).send({ message: "Email already exists" });
+            return res.status(200).send({ message: "Email already exists" });
         } else {
 
             // Find the highest ID currently in the profiles table
@@ -100,7 +100,7 @@ app.post("/profile", async (req, res) => {
                 "fullName": req.body.fullName,
                 "email": req.body.email,
                 "address": req.body.address,
-                "image": req.body.image
+                "image": req.body.profilePicture
             };
             const newLogin = {
                 "email": req.body.email,

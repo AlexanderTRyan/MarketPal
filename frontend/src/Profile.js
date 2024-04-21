@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { FaEdit, FaSave, FaTimes, FaTrash } from 'react-icons/fa';
 
 function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [isEditMode, setIsEditMode] = useState(false);
   const [tempProfile, setTempProfile] = useState(userProfile);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
@@ -34,12 +34,14 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
   const cancelChanges = () => {
     setIsEditMode(false);
     setTempProfile(userProfile); // Reset tempProfile to userProfile
+    reset(); // Reset form errors
   };
 
   const saveChanges = () => {
     console.log('Saved changes:', tempProfile);
     onUpdateProfile(tempProfile);
     setIsEditMode(false);
+    reset();
   };
 
   const confirmDeleteProfile = () => {
@@ -124,7 +126,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
                 </label>
                 {isEditMode ? (
                   <input
-                    {...register('fullName')}
+                    {...register('fullName', { required: true })}
                     type="text"
                     className="form-control"
                     id="fullName"
@@ -142,7 +144,10 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
                 </label>
                 {isEditMode ? (
                   <input
-                    {...register('email')}
+                    {...register('email', {
+                      required: true,
+                      pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    })}
                     type="email"
                     className="form-control"
                     id="email"
@@ -153,6 +158,45 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
                 ) : (
                   <p>{tempProfile.email}</p>
                 )}
+                {errors.email && <p className="text-danger">Invalid email address</p>}
+              </div>
+              {isEditMode && (
+                <div className="mb-3">
+                  <label htmlFor="oldPassword" className="form-label">
+                    Old Password
+                  </label>
+                  <input
+                    {...register('oldPassword', { required: true })}
+                    type="password"
+                    className="form-control"
+                    id="oldPassword"
+                    name="oldPassword"
+                    onChange={handleInputChange}
+                  />
+                  {errors.oldPassword && <p className="text-danger">Old password is required</p>}
+                </div>
+              )}
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label">
+                  {isEditMode ? 'New Password' : 'Password'}
+                </label>
+                {isEditMode ? (
+                  <input
+                    {...register('password', {
+                      required: true,
+                      minLength: 6,
+                      pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
+                    })}
+                    type="password"
+                    className="form-control"
+                    id="password"
+                    name="password"
+                    onChange={handleInputChange}
+                  />
+                ) : (
+                  <p>******</p>
+                )}
+                {errors.password && <p className="text-danger">Password must be at least 6 characters long and contain at least one letter and one number</p>}
               </div>
               <div className="mb-3">
                 <label htmlFor="address" className="form-label">
@@ -160,7 +204,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
                 </label>
                 {isEditMode ? (
                   <input
-                    {...register('address')}
+                    {...register('address', { required: true })}
                     type="text"
                     className="form-control"
                     id="address"
@@ -178,7 +222,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
                 <button className="btn btn-secondary" onClick={cancelChanges}>
                   <FaTimes /> Cancel
                 </button>
-                <button className="btn btn-success" onClick={saveChanges}>
+                <button className="btn btn-success" onClick={handleSubmit(saveChanges)}>
                   <FaSave /> Save
                 </button>
               </div>

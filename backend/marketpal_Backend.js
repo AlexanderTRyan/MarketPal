@@ -50,8 +50,7 @@ app.get("/login/:email/:password", async (req, res) => {
 
     //console.log(newLogin);
 
-    const results = await db.collection("login")
-        .findOne(newLogin);
+    const results = await db.collection("login").findOne(newLogin);
 
     if (!results) {
         const failedLogin = {
@@ -165,6 +164,14 @@ app.put("/profile/:id", async (req, res) => {
     console.log("profile to Update :", id);
     // Data for updating the document, typically comes from the request body
     console.log(req.body);
+
+    const curLogin = await db.collection('login').findOne(query);
+    if (curLogin.password !== req.body.oldPassword) {
+        return res.status(200).send({
+            message: 'Incorrect Password'
+        });
+
+    }
 
     const updateProfile = {
         $set: {      

@@ -65,8 +65,10 @@ function App() {
       if (res.message === 'User updated successfully') {
         alert('Profile Updated');
         setUserProfile(profile);
+      } else if (res.message === 'Incorrect Password') {
+        alert('Old Password Incorrect Try again');
       } else {
-        alert('Server Error Try Again Later')
+        alert('Server Error Try Again Later');
       }
     })
   }

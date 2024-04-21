@@ -1,0 +1,83 @@
+.Messages {
+    display: flex;
+}
+
+.message-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.ConversationList {
+    flex: 1;
+}
+
+.MessageList {
+    flex: 3;
+}
+
+.MessageList ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.MessageList li {
+    margin-bottom: 10px;
+    Width: 45%;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+}
+
+.message-content {
+    padding: 5px 10px;
+    border-radius: 5px;
+    max-width: 100%;
+}
+
+.message-sender {
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+
+.sent {
+    align-self: flex-end;
+    background-color: #DCF8C6;
+    /* Light green for sent messages */
+    border-top-right-radius: 5px; /* Rounded corners for sent messages */
+    border-bottom-right-radius: 5px;
+    margin-left: auto; /* Move sent messages to the right */
+}
+
+.received {
+    align-self: flex-start;
+    background-color: #F3F3F3;
+    /* Light gray for received messages */
+    border-top-left-radius: 5px; /* Rounded corners for received messages */
+    border-bottom-left-radius: 5px;
+    margin-right: auto; /* Move received messages to the left */
+}
+
+.ConversationList ul {
+    padding: 0;
+}
+
+.ConversationList button {
+    width: 100%;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.ConversationList button:hover {
+    background-color: #e0e0e0;
+}
+
+.ConversationList button:focus {
+    outline: none;
+}

@@ -1,0 +1,37 @@
+[
+    {
+      "id": 1,
+      "users": [
+        {
+          "id": 1,
+          "name": "Robot One"
+        },
+        {
+          "id": 2,
+          "name": "Robot Two"
+        }
+      ],
+      "messages": [
+        { "text": "Hi there!", "sender": "Robot Two" },
+        { "text": "How are you?", "sender": "John Doe" }
+      ]
+    },
+    {
+      "id": 2,
+      "users": [
+        {
+          "id": 2,
+          "name": "Robot Two"
+        },
+        {
+          "id": 3,
+          "name": "Robot Three"
+        }
+      ],
+      "messages": [
+        { "text": "Hey!", "sender": "Jane Smith" },
+        { "text": "I'm good, thanks.", "sender": "Jane Smith" }
+      ]
+    }
+  ]
+  

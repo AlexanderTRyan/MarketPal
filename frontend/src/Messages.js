@@ -1,60 +1,104 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import './Messages.css'; // Import CSS file for styling
 
-function Messages() {
-  // State to manage messages
-  const [messages, setMessages] = useState([]);
+// Custom debounce hook
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
-  // Function to handle adding a new message
-  const addMessage = (message) => {
-    setMessages([...messages, message]);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+function Messages({ userProfile }) {
+  const [conversations, setConversations] = useState([
+    { id: 1, name: 'John Doe', messages: [{ text: 'Hi there!', sender: 'Robot Two' }, { text: 'How are you?', sender: 'John Doe' }] },
+    { id: 2, name: 'Jane Smith', messages: [{ text: 'Hey!', sender: 'Jane Smith' }, { text: 'I\'m good, thanks.', sender: 'Robot Two' }] },
+  ]);
+  const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
+  const [newMessage, setNewMessage] = useState('');
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    // Focus on the input field when component mounts or when conversation changes
+    inputRef.current.focus();
+  }, [selectedConversationIndex]);
+
+  const debouncedNewMessage = useDebounce(newMessage, 300); // Adjust the delay as needed
+
+  const handleConversationClick = (index) => {
+    setSelectedConversationIndex(index);
   };
 
-  // Component for rendering individual messages
-  const MessageItem = ({ message }) => {
-    return <div className="Message">{message}</div>;
+  const handleInputChange = (event) => {
+    setNewMessage(event.target.value);
   };
 
-  // Component for rendering the message board
-  const MessageBoard = () => {
+  const handleSendMessage = () => {
+    if (debouncedNewMessage.trim() === '') return;
+    const updatedConversations = [...conversations];
+    updatedConversations[selectedConversationIndex].messages.push({
+      text: debouncedNewMessage,
+      sender: userProfile.fullName,
+    });
+    setConversations(updatedConversations);
+    setNewMessage('');
+  };
+
+  const ConversationList = () => {
     return (
-      <div className="MessageBoard">
-        {messages.map((message, index) => (
-          <MessageItem key={index} message={message} />
-        ))}
+      <div className="message-card ConversationList">
+        <h2>Conversations</h2>
+        <ul>
+          {conversations.map((conversation, index) => (
+            <li key={conversation.id}>
+              <button onClick={() => handleConversationClick(index)}>{conversation.name}</button>
+            </li>
+          ))}
+        </ul>
       </div>
     );
   };
 
-  // Component for adding new messages
-  const AddMessageForm = () => {
-    const [newMessage, setNewMessage] = useState('');
-
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      if (newMessage.trim() !== '') {
-        addMessage(newMessage);
-        setNewMessage('');
-      }
-    };
+  const MessageList = () => {
+    const selectedConversation = conversations[selectedConversationIndex];
+    const currentUser = userProfile.fullName;
 
     return (
-      <form onSubmit={handleSubmit} className="AddMessageForm">
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type your message..."
-        />
-        <button type="submit">Add Message</button>
-      </form>
+      <div className="message-card MessageList">
+        <h2>Messages</h2>
+        <ul>
+          {selectedConversation.messages.map((message, index) => (
+            <li key={index} className={message.sender === currentUser ? 'sent' : 'received'}>
+              <div className="message-content">
+                {message.text}
+              </div>
+              <div className="message-sender">
+                {message.sender}
+              </div>
+            </li>
+          ))}
+        </ul>
+        <div className="message-input">
+          <input type="text" value={newMessage} onChange={handleInputChange} ref={inputRef} />
+          <button onClick={handleSendMessage}>Send</button>
+        </div>
+      </div>
     );
   };
 
   return (
     <div className="Messages">
-      <h1>Messages</h1>
-      <AddMessageForm />
-      <MessageBoard />
+      <ConversationList />
+      <MessageList />
     </div>
   );
 }

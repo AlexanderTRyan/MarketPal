@@ -2,21 +2,21 @@
     {
        "id": 1,
        "fullName": "Robot 1",
-       "email": "Thisisemail.email.com",
+       "email": "Robot1@email.com",
        "address": "This is address of Robot 1",
        "image": ""
     },
     {
         "id": 2,
         "fullName": "Robot 2",
-        "email": "Thisisemail.email.com",
+        "email": "Robot2@email.com",
         "address": "This is address of Robot 2",
         "image": ""
      },
      {
         "id": 3,
         "fullName": "Robot 3",
-        "email": "Thisisemail.email.com",
+        "email": "Robot3@email.com",
         "address": "This is address of Robot 3",
         "image": ""
      }

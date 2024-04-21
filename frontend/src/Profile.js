@@ -36,7 +36,7 @@ function Profile({ userProfile, onDeleteProfile }) {
   return (
     <div className="Profile">
       <h1>Profile</h1>
-      <img src={profile.image} alt="Profile" className="profile-image" />
+      <img src={profile.profilePicture} alt="Profile" className="profile-image" />
       <p>Name: {profile.fullName || ''}</p>
       <p>Email: {profile.email || ''}</p>
       <p>Address: {profile.address || ''}</p>

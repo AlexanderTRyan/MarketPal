@@ -212,7 +212,7 @@ function App() {
 
   function Header({ userProfile, handleSignOut }) {
     const isSignedIn = userProfile !== null;
-
+    console.log(userProfile);
     const handleSignInOut = () => {
       if (isSignedIn) {
         handleSignOut();
@@ -227,22 +227,34 @@ function App() {
           <img src="./logo.png" alt="MarketPal Logo" style={{ width: '40px', height: 'auto' }} />
         </div>
         <nav className="navbar">
-          <button type="button" className="nav-link" onClick={handleSignInOut}>
-            {isSignedIn ? <FaSignInAlt /> : <FaSignOutAlt />} {isSignedIn ? 'Sign Out' : 'Sign In'}
-          </button>
-          <button className={activePage === 'browse' ? 'active' : ''} onClick={() => handlePageChange('browse')}>
-            <FaHome /> Browse
-          </button>
-          <button className={activePage === 'profile' ? 'active' : ''} onClick={() => handlePageChange('profile')}>
-            <FaUser /> Profile
-          </button>
-          <button className={activePage === 'messages' ? 'active' : ''} onClick={() => handlePageChange('messages')}>
-            <FaEnvelope /> Messages
-          </button>
-          <button className={activePage === 'create_post' ? 'active' : ''} onClick={() => handlePageChange('create_post')}>
-            <FaPlus /> Create Post
-          </button>
+          
+          <div className="nav-buttons">
+            <button className={activePage === 'browse' ? 'active' : ''} onClick={() => handlePageChange('browse')}>
+              <FaHome /> Browse
+            </button>
+            <button className={activePage === 'profile' ? 'active' : ''} onClick={() => handlePageChange('profile')}>
+              <FaUser /> Profile
+            </button>
+            <button className={activePage === 'messages' ? 'active' : ''} onClick={() => handlePageChange('messages')}>
+              <FaEnvelope /> Messages
+            </button>
+            <button className={activePage === 'create_post' ? 'active' : ''} onClick={() => handlePageChange('create_post')}>
+              <FaPlus /> Create Post
+            </button>
+            <button type="button" className="nav-link" onClick={handleSignInOut}>
+              {isSignedIn ? <FaSignInAlt /> : <FaSignOutAlt />} {isSignedIn ? 'Sign Out' : 'Sign In'}
+            </button>
+          </div>
         </nav>
+
+        {isSignedIn && (
+        <div className="profile-section">
+          <div className="profile-picture">
+            <img src={userProfile.profilePicture} alt="Profile" style={{ width: '40px', height: '40px', borderRadius: '25%' }} />
+          </div>
+          <div className="user-name">{userProfile.fullName}</div>
+        </div>
+      )}
       </header>
     );
   }

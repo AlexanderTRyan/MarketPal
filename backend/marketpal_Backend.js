@@ -100,7 +100,7 @@ app.post("/profile", async (req, res) => {
                 "fullName": req.body.fullName,
                 "email": req.body.email,
                 "address": req.body.address,
-                "image": req.body.profilePicture
+                "profilePicture": req.body.profilePicture
             };
             const newLogin = {
                 "email": req.body.email,
@@ -172,7 +172,7 @@ app.put("/profile/:id", async (req, res) => {
             "fullName": req.body.fullName,
             "email": req.body.email,
             "address": req.body.address,
-            "image": req.body.image
+            "profilePicture": req.body.profilePicture
         }
     };
     const updateLogin = {
@@ -241,7 +241,7 @@ app.put("/profile/:id", async (req, res) => {
 //             "name": values[1], // also "name": req.body.name,
 //             "price": values[2], // also "price": req.body.price,
 //             "description": values[3], // also "description": req.body.description,
-//             "imageUrl": values[4] // also "imageUrl": req.body.imageUrl
+//             "profilePictureUrl": values[4] // also "profilePictureUrl": req.body.profilePictureUrl
 //         };
 //         console.log(newDocument);
 
@@ -296,7 +296,7 @@ app.put("/profile/:id", async (req, res) => {
 //             "name": req.body.name,
 //             "price": req.body.price,
 //             "description": req.body.description,
-//             "imageUrl": req.body.imageUrl
+//             "profilePictureUrl": req.body.profilePictureUrl
 //         }
 //     };
 //     // Add options if needed, for example { upsert: true } to create a document if it doesn't exist

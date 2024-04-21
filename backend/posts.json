@@ -1,26 +1,75 @@
 [
    {
-      "title": "AirPods",
-      "price": 199.99,
-      "description": "This is the description for post one",
-      "imageUrl":["https://img.icons8.com/?size=80&id=V3pJPbqyDapE&format=png", "https://img.icons8.com/?size=50&id=45811&format=png", "https://img.icons8.com/?size=48&id=GMsgZZTot7gJ&format=png"],
-      "category": "Electronics",
-      "condition": "New"
+     "title": "AirPods",
+     "price": 199.99,
+     "description": "This is the description for post one",
+     "imageUrl": [
+       "https://img.icons8.com/?size=80&id=V3pJPbqyDapE&format=png",
+       "https://img.icons8.com/?size=50&id=45811&format=png",
+       "https://img.icons8.com/?size=48&id=GMsgZZTot7gJ&format=png"
+     ],
+     "category": "Electronics",
+     "condition": "New"
    },
    {
      "title": "Pans",
      "price": 12.30,
      "description": "This is the description for post two",
-     "imageUrl":["https://img.icons8.com/?size=80&id=n3e8javS29Pw&format=png", "https://img.icons8.com/?size=80&id=A2rCBQKyZewD&format=png", "https://img.icons8.com/?size=80&id=py9n3ZtvkoDi&format=png"],
+     "imageUrl": [
+       "https://img.icons8.com/?size=80&id=n3e8javS29Pw&format=png",
+       "https://img.icons8.com/?size=80&id=A2rCBQKyZewD&format=png",
+       "https://img.icons8.com/?size=80&id=py9n3ZtvkoDi&format=png"
+     ],
      "category": "Home & Kitchen",
      "condition": "New"
-  },
-  {
+   },
+   {
      "title": "Auto Parts",
      "price": 89.30,
      "description": "This is the description for post three",
-     "imageUrl":["https://img.icons8.com/?size=64&id=SKPbKVTOxWge&format=png", "https://img.icons8.com/?size=50&id=35068&format=png", "https://img.icons8.com/?size=48&id=8tEJpwNfn6zq&format=png", "https://img.icons8.com/?size=48&id=qFExTUNHCJd4&format=png" ],
+     "imageUrl": [
+       "https://img.icons8.com/?size=64&id=SKPbKVTOxWge&format=png",
+       "https://img.icons8.com/?size=50&id=35068&format=png",
+       "https://img.icons8.com/?size=48&id=8tEJpwNfn6zq&format=png",
+       "https://img.icons8.com/?size=48&id=qFExTUNHCJd4&format=png"
+     ],
      "category": "Electronics",
      "condition": "Used-Like New"
-  }
-]
+   },
+   {
+     "title": "Vintage Watch",
+     "price": 299.99,
+     "description": "This is a vintage watch in excellent condition.",
+     "imageUrl": [
+       "https://img.icons8.com/?size=80&id=0bPylfYTF3Yr&format=png",
+       "https://img.icons8.com/?size=80&id=bPylfYTF3Yr&format=png",
+       "https://img.icons8.com/?size=80&id=aPylfYTF3Yr&format=png"
+     ],
+     "category": "Jewelry & Watches",
+     "condition": "Pre-Owned"
+   },
+   {
+     "title": "Gaming Console",
+     "price": 399.99,
+     "description": "Brand new gaming console with the latest features.",
+     "imageUrl": [
+       "https://img.icons8.com/?size=80&id=QzDvHVXQ5lnf&format=png",
+       "https://img.icons8.com/?size=80&id=rPylfYTF3Yr&format=png",
+       "https://img.icons8.com/?size=80&id=fPylfYTF3Yr&format=png"
+     ],
+     "category": "Electronics",
+     "condition": "New"
+   },
+   {
+     "title": "Oil Painting",
+     "price": 199.99,
+     "description": "Beautiful oil painting of a landscape.",
+     "imageUrl": [
+       "https://img.icons8.com/?size=80&id=7PylfYTF3Yr&format=png",
+       "https://img.icons8.com/?size=80&id=6PylfYTF3Yr&format=png",
+       "https://img.icons8.com/?size=80&id=5PylfYTF3Yr&format=png"
+     ],
+     "category": "Arts & Crafts",
+     "condition": "New"
+   }
+ ]

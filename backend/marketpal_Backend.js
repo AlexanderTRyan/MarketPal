@@ -198,8 +198,11 @@ app.put("/profile/:id", async (req, res) => {
     const profileUpdated = await db.collection("profiles").findOne(query);
 
 
-    res.status(200);
-    res.send(profileUpdated);
+    res.status(200).send({
+        message: "User updated successfully",
+        profile: profileResults,
+        login: loginResults
+    });
 });
 
 // Old examples for how to get post, put and delete

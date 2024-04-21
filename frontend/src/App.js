@@ -60,6 +60,17 @@ function App() {
     })
   }
 
+  const handleUpdateProfile = (profile) => {
+    callServer('PUT', 'profile/' + userProfile.id, profile, (res) => {
+      if (res.message === 'User updated successfully') {
+        alert('Profile Updated');
+        setUserProfile(profile);
+      } else {
+        alert('Server Error Try Again Later')
+      }
+    })
+  }
+
   function login(profile) {
     if (profile.message == 'Login failed') {
       setLoginError('Login failed. Please try again.');
@@ -286,7 +297,7 @@ function App() {
       {(signInPopup) && <SignIn />}
       {(signUpPopup) && <SignUp />}
       {(activePage === 'browse') && <Browse />}
-      {(activePage === 'profile') && <Profile userProfile={userProfile} onDeleteProfile={handleDeleteProfile} />}
+      {(activePage === 'profile') && <Profile userProfile={userProfile} onDeleteProfile={handleDeleteProfile} onUpdateProfile={handleUpdateProfile}/>}
       {(activePage === 'messages') && <Messages />}
       {(activePage === 'create_post') && <CreatePost />}
 

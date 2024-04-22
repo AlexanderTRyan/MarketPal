@@ -574,7 +574,7 @@ h1 em {
 }
 
 .popup-content {
-  background-color: #fff;
+  background-color: #F0F2F5;
   padding: 20px;
   border-radius: 8px;
   max-width: 80%;
@@ -595,4 +595,36 @@ h1 em {
   margin-top: 150px;
   width: 80%;
   height: 50%;
+}
+
+.bottom-preview{
+  margin-bottom: 20px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+
+.preview-info2 {
+  border-left: solid;
+  /* Remove button border */
+  border-radius: 5px;
+  /* Button border radius */
+  resize: none;
+  position: relative;
+}
+
+.popup-close-button{
+  display: flex;
+  align-items: right;
+  justify-content: right;
+}
+
+.close-button{
+  width: 45px;
+}
+
+.close-button:hover{
+  width: 50px;
 }

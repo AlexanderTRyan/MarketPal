@@ -57,7 +57,7 @@ function Browse() {
       results = postCatalog.filter(allItems => {
         return allItems.category.toLowerCase().includes(category.toLowerCase());
       });
-    } else{
+    } else {
       results = postCatalog;
     }
 
@@ -110,6 +110,11 @@ function Browse() {
     return (
       <div className='popup-overlay'>
         <div className='popup-content'>
+          <div className='popup-close-button'>
+            <div className='popup-close-button-hover'>
+            <img src="https://img.icons8.com/?size=80&id=114052&format=png" onClick={handleClosePopup} alt="Exit Button" className='close-button'/>
+            </div>
+          </div>
           <div className="preview-div">
             <div>
               <div className='img-preview-div-popup'>
@@ -123,16 +128,25 @@ function Browse() {
               </div>
             </div>
 
-            <div className="preview-info">
+            <div className="preview-info2">
               <div className="preview-info-content">
                 <h2 className='preview-info-h1'>{post.title}</h2>
                 <h4 className='preview-info-h3'>${post.price}</h4>
-                <h3 className='preview-info-h3'>Condition:{post.condition}</h3>
-                <p className='preview-info-h3'>Description:{post.description}</p>
+                <h3 className='preview-info-h3'>Condition: {post.condition}</h3>
+                <p className='preview-info-h3'>{post.description}</p>
                 <hr />
 
+
+
+              </div>
+              <div>
                 <h3 className='preview-info-h3'>Seller Information:</h3>
-                <button onClick={handleClosePopup}>Close</button>
+              </div>
+
+              <div className='bottom-preview'>
+                <div className='bottom-preview-right'>
+                  <button>Message</button>
+                </div>
               </div>
             </div>
           </div>

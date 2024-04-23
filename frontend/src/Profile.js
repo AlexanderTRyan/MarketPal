@@ -227,17 +227,20 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
                 </button>
               </div>
             )}
+            {!isEditMode && (
+              <div className="d-flex justify-content-center mt-3">
+                <button className="btn btn-danger" onClick={confirmDeleteProfile}>
+                  <FaTrash /> Delete Profile
+                </button>
+              </div>
+            )}
+                  <br></br>
+
           </div>
         </div>
       </div>
       {showDeletePopup && <DeletePopup />}
-      {!isEditMode && (
-        <div className="d-flex justify-content-center mt-3">
-          <button className="btn btn-danger" onClick={confirmDeleteProfile}>
-            <FaTrash /> Delete Profile
-          </button>
-        </div>
-      )}
+      <br></br>
     </div>
   );
 }

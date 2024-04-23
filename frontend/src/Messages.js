@@ -88,7 +88,7 @@ function Messages({ userProfile }) {
           ))}
         </ul>
         <div className="message-input">
-          <input type="text" value={newMessage} onChange={handleInputChange} ref={inputRef} />
+          <input type="text" value={newMessage} style={{width: '75%', height: '100%'}} onChange={handleInputChange} ref={inputRef} />
           <button onClick={handleSendMessage}>Send</button>
         </div>
       </div>

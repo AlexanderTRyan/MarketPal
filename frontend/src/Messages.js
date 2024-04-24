@@ -14,7 +14,7 @@ function Messages({ userProfile }) {
     }
 
     // Establish WebSocket connection when component mounts
-    WebSocketService.connect();
+    WebSocketService.connect(userProfile.id);
     WebSocketService.subscribeToMessages(handleNewMessage);
 
     return () => {
@@ -27,14 +27,17 @@ function Messages({ userProfile }) {
     console.log(message);
     if (message.type === 'conversations') {
       setConversations(message.data);
-    } else {
+    } else if (message.type === 'message') {
       // Update state with the new message
       setConversations(prevConversations => {
         const updatedConversations = [...prevConversations];
-        updatedConversations[selectedConversationIndex].messages.push(message);
+        const conversationToUpdate = { ...updatedConversations[selectedConversationIndex] };
+        conversationToUpdate.messages = [...conversationToUpdate.messages, message.data];
+        updatedConversations[selectedConversationIndex] = conversationToUpdate;
         return updatedConversations;
       });
     }
+    
   };
 
   const handleConversationClick = (index) => {

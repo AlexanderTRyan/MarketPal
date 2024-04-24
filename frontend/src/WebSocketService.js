@@ -5,9 +5,9 @@ class WebSocketService {
       this.socket = null;
     }
   
-    connect() {
+    connect(id) {
         console.log("connecting to Socket")
-      this.socket = new WebSocket('ws://localhost:8080'); // Replace with your server URL
+      this.socket = new WebSocket('ws://localhost:8080?userId=' + id); // Replace with your server URL
     }
   
     disconnect() {

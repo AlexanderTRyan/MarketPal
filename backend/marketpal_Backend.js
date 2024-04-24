@@ -285,32 +285,60 @@ const updateConversation = async (message, convId) => {
   };
 
 // WebSocket server event listeners
-wss.on('connection', (ws) => {
-    console.log('Client connected');
+wss.on('connection', (ws, req) => {
+
+    const url = new URL(req.url, 'http://localhost:8080');
+    const userId = parseInt(url.searchParams.get('userId'));
+
+    // Add the userId to the WebSocket connection
+    ws.userId = userId;
+    console.log('Client connected ID: ' + userId);
+
 
     // Add the new client to the clients array
     clients.push(ws);
-    const userId = 2;
 
     sendConversations(ws, userId);
 
 
 
     // WebSocket message event listener
-    ws.on('message', (message) => {
+    ws.on('message', async (message) => {
         console.log('Received message:');
         const parsedMessage = JSON.parse(message);
         console.log(parsedMessage);
 
         updateConversation(parsedMessage.message, parsedMessage.conversationId);
-        
+
+        const conversation = await db.collection('messages').findOne({ id: parsedMessage.conversationId });
+        console.log(conversation);
+        if (!conversation) {
+            console.log('Conversation not found');
+            return;
+        }
+
+        const recipient = conversation.users.find(user => user.id !== parsedMessage.message.senderId);
+        console.log(recipient);
+        if (!recipient) {
+            console.log('Recipient not found');
+            return;
+        }
+
+        const recipientWs = clients.find(client => client.userId === recipient.id);
+        console.log(recipientWs)
+        if (!recipientWs) {
+            console.log('Recipient WebSocket not connected');
+            return;
+        }
+
+        recipientWs.send(JSON.stringify({ type: 'message', data: parsedMessage.message }));
 
         // Broadcast the received message to all clients
-        wss.clients.forEach((client) => {
-            if (client !== ws && client.readyState === WebSocket.OPEN) {
-                client.send(JSON.stringify({ type: 'message', data: message}));
-            }
-        });
+        // wss.clients.forEach((client) => {
+        //     if (client !== ws && client.readyState === WebSocket.OPEN) {
+        //         client.send(JSON.stringify({ type: 'message', data: message}));
+        //     }
+        // });
     });
 
     // WebSocket close event listener

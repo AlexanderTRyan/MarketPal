@@ -254,6 +254,36 @@ const sendConversations = async (ws, userId) => {
     }
 };
 
+const updateConversation = async (message, convId) => {
+    const client = new MongoClient(url);
+    try {
+      await client.connect();
+      const query = { id: convId };
+  
+      const updateOperation = {
+        $push: {
+          messages: message
+        }
+      };
+  
+      const result = await client.db(dbName).collection("messages").updateOne(query, updateOperation);
+  
+      if (result.modifiedCount === 0) {
+        console.log("No conversation found with ID:", convId);
+      } else {
+        console.log("Message added to conversation with ID:", convId);
+      }
+  
+      return result;
+    } catch (error) {
+      console.error("Error updating conversation:", error);
+      return null; // Return null or handle the error as appropriate
+    } finally {
+      // Close the database connection
+      await client.close();
+    }
+  };
+
 // WebSocket server event listeners
 wss.on('connection', (ws) => {
     console.log('Client connected');
@@ -268,12 +298,17 @@ wss.on('connection', (ws) => {
 
     // WebSocket message event listener
     ws.on('message', (message) => {
-        console.log('Received message:', message);
+        console.log('Received message:');
+        const parsedMessage = JSON.parse(message);
+        console.log(parsedMessage);
+
+        updateConversation(parsedMessage.message, parsedMessage.conversationId);
+        
 
         // Broadcast the received message to all clients
         wss.clients.forEach((client) => {
             if (client !== ws && client.readyState === WebSocket.OPEN) {
-                client.send(message);
+                client.send(JSON.stringify({ type: 'message', data: message}));
             }
         });
     });

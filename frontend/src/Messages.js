@@ -48,13 +48,24 @@ function Messages({ userProfile }) {
   const handleSendMessage = () => {
     if (newMessage.trim() === '') return;
     const updatedConversations = [...conversations];
-    updatedConversations[selectedConversationIndex].messages.push({
+    const currentConversation = updatedConversations[selectedConversationIndex];
+
+    const messageToSend = {
       text: newMessage,
       sender: userProfile.fullName,
-      time_sent: new Date().toISOString() // Add current time when sending a new message
-    });
+      time_sent: new Date().toISOString(),
+      read: false
+    };
+
+    const curCovId = currentConversation.id;
+
+    currentConversation.messages.push(messageToSend);
+    WebSocketService.sendMessage({ message: messageToSend, conversationId: curCovId });
+
     setConversations(updatedConversations);
     setNewMessage('');
+
+
   };
 
   const ConversationList = () => {

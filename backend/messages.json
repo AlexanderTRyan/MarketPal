@@ -1,37 +1,36 @@
 [
-    {
-      "id": 1,
-      "users": [
-        {
-          "id": 1,
-          "name": "Robot One"
-        },
-        {
-          "id": 2,
-          "name": "Robot Two"
-        }
-      ],
-      "messages": [
-        { "text": "Hi there!", "sender": "Robot Two" },
-        { "text": "How are you?", "sender": "John Doe" }
-      ]
-    },
-    {
-      "id": 2,
-      "users": [
-        {
-          "id": 2,
-          "name": "Robot Two"
-        },
-        {
-          "id": 3,
-          "name": "Robot Three"
-        }
-      ],
-      "messages": [
-        { "text": "Hey!", "sender": "Jane Smith" },
-        { "text": "I'm good, thanks.", "sender": "Jane Smith" }
-      ]
-    }
-  ]
-  
+  {
+    "id": 1,
+    "users": [
+      {
+        "id": 1,
+        "name": "Robot One"
+      },
+      {
+        "id": 2,
+        "name": "Robot Two"
+      }
+    ],
+    "messages": [
+      { "text": "Hi there!", "sender": "Robot Two", "time_sent": "2024-04-24T12:00:00", "read": true },
+      { "text": "How are you?", "sender": "Robot One", "time_sent": "2024-04-24T12:01:00", "read": false }
+    ]
+  },
+  {
+    "id": 2,
+    "users": [
+      {
+        "id": 2,
+        "name": "Robot Two"
+      },
+      {
+        "id": 3,
+        "name": "Robot Three"
+      }
+    ],
+    "messages": [
+      { "text": "Hey!", "sender": "Robot Three", "time_sent": "2024-04-24T12:02:00", "read": true },
+      { "text": "I'm good, thanks.", "sender": "Robot Three", "time_sent": "2024-04-24T12:03:00", "read": false }
+    ]
+  }
+]

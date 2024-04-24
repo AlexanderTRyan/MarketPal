@@ -174,7 +174,7 @@ app.put("/profile/:id", async (req, res) => {
     }
 
     const updateProfile = {
-        $set: {      
+        $set: {
             "id": id,
             "fullName": req.body.fullName,
             "email": req.body.email,
@@ -201,7 +201,7 @@ app.put("/profile/:id", async (req, res) => {
     if (loginResults.matchedCount === 0) {
         return res.status(404).send({ message: 'Login not found' });
     }
-    
+
     const profileUpdated = await db.collection("profiles").findOne(query);
 
 
@@ -209,5 +209,83 @@ app.put("/profile/:id", async (req, res) => {
         message: "User updated successfully",
         profile: profileResults,
         login: loginResults
+    });
+});
+
+//Web Socket for communication in the messages screen
+
+const WebSocket = require('ws');
+
+const wss = new WebSocket.Server({ port: 8080 });
+
+// Array to store connected clients
+const clients = [];
+
+
+// Function to establish a database connection and fetch conversations
+const getConversations = async (userId) => {
+    const client = new MongoClient(url);
+    try {
+        // Connect to the MongoDB server
+        await client.connect();
+
+        // Fetch conversations associated with the user ID
+        const conversations = await db.collection('messages').find({ users: { $elemMatch: { id: userId } } }).toArray();
+        return conversations;
+    } catch (error) {
+        console.error('Error fetching conversations:', error);
+        return [];
+    } finally {
+        // Close the database connection
+        await client.close();
+    }
+};
+
+// Function to send conversations to a client
+const sendConversations = async (ws, userId) => {
+    try {
+        // Fetch conversations associated with the user ID
+        const conversations = await getConversations(userId);
+
+        // Send conversations to the client
+        ws.send(JSON.stringify({ type: 'conversations', data: conversations }));
+    } catch (error) {
+        console.error('Error sending conversations to client:', error);
+    }
+};
+
+// WebSocket server event listeners
+wss.on('connection', (ws) => {
+    console.log('Client connected');
+
+    // Add the new client to the clients array
+    clients.push(ws);
+    const userId = 2;
+
+    sendConversations(ws, userId);
+
+
+
+    // WebSocket message event listener
+    ws.on('message', (message) => {
+        console.log('Received message:', message);
+
+        // Broadcast the received message to all clients
+        wss.clients.forEach((client) => {
+            if (client !== ws && client.readyState === WebSocket.OPEN) {
+                client.send(message);
+            }
+        });
+    });
+
+    // WebSocket close event listener
+    ws.on('close', () => {
+        console.log('Client disconnected');
+
+        // Remove the disconnected client from the clients array
+        const index = clients.indexOf(ws);
+        if (index !== -1) {
+            clients.splice(index, 1);
+        }
     });
 });

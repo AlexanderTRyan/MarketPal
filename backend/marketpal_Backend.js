@@ -54,7 +54,10 @@ app.get("/login/:email/:password", async (req, res) => {
         .findOne(newLogin);
 
     if (!results) {
-        res.send("failed").status(404);
+        const failedLogin = {
+            "message": "Login failed"
+        };
+        res.send(failedLogin).status(404);
     } else {
         const query = { "id": Number(results.id) };
         const profile = await db.collection("profiles")
@@ -72,7 +75,7 @@ app.post("/profile", async (req, res) => {
         // Check if the email already exists in the profiles collection
         const existingProfile = await db.collection("profiles").findOne({ email: req.body.email });
         if (existingProfile) {
-            return res.status(400).send({ message: "Email already exists" });
+            return res.status(200).send({ message: "Email already exists" });
         } else {
 
             // Find the highest ID currently in the profiles table
@@ -97,7 +100,7 @@ app.post("/profile", async (req, res) => {
                 "fullName": req.body.fullName,
                 "email": req.body.email,
                 "address": req.body.address,
-                "image": req.body.image
+                "profilePicture": req.body.profilePicture
             };
             const newLogin = {
                 "email": req.body.email,
@@ -169,7 +172,7 @@ app.put("/profile/:id", async (req, res) => {
             "fullName": req.body.fullName,
             "email": req.body.email,
             "address": req.body.address,
-            "image": req.body.image
+            "profilePicture": req.body.profilePicture
         }
     };
     const updateLogin = {
@@ -278,7 +281,7 @@ app.post("/addPost", async (req, res) => {
 //             "name": values[1], // also "name": req.body.name,
 //             "price": values[2], // also "price": req.body.price,
 //             "description": values[3], // also "description": req.body.description,
-//             "imageUrl": values[4] // also "imageUrl": req.body.imageUrl
+//             "profilePictureUrl": values[4] // also "profilePictureUrl": req.body.profilePictureUrl
 //         };
 //         console.log(newDocument);
 
@@ -333,7 +336,7 @@ app.post("/addPost", async (req, res) => {
 //             "name": req.body.name,
 //             "price": req.body.price,
 //             "description": req.body.description,
-//             "imageUrl": req.body.imageUrl
+//             "profilePictureUrl": req.body.profilePictureUrl
 //         }
 //     };
 //     // Add options if needed, for example { upsert: true } to create a document if it doesn't exist

@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
-import { FaHome, FaUser, FaEnvelope, FaPlus, FaSignInAlt } from 'react-icons/fa';
+import { FaHome, FaUser, FaEnvelope, FaPlus, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 
 
 import Browse from './Browse';
@@ -10,53 +10,93 @@ import Messages from './Messages';
 import CreatePost from './CreatePost';
 
 const URL = 'http://localhost:8081';
-// const URL = "mongodb+srv://seth2proctor:jCca68lIMh4zPFcV@marketpal.bs8kcp1.mongodb.net/?retryWrites=true&w=majority&appName=MarketPal";
-let userProfile = null;
+
 
 function callServer(method, extention, requestBody, handleResponse) {
   fetch(`${URL}/${extention}`, {
-      method: method,
-      headers: {
-          'content-type': 'application/json'
-      },
-      body: requestBody ? JSON.stringify(requestBody) : null
+    method: method,
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: requestBody ? JSON.stringify(requestBody) : null
   })
-  .then(response => {
+    .then(response => {
       if (response.status !== 200) {
-          throw new Error('Network response was not ok');
+        throw new Error('Network response was not ok');
       }
       return response.json();
-  })
-  .then(data => {
+    })
+    .then(data => {
       // Call the provided response handling function
       handleResponse(data);
-  })
-  .catch(error => {
+    })
+    .catch(error => {
       console.error('Error:', error);
-  });
+    });
 }
-
-function login(profile) {
-  userProfile = profile;
-  console.log(userProfile);
-
-} 
 
 function App() {
 
   const [activePage, setActivePage] = useState('browse');
   const [signInPopup, setSignInPopup] = useState(false);
   const [signUpPopup, setSignUpPopup] = useState(false);
+  const [loginError, setLoginError] = useState('');
+  const [userProfile, setUserProfile] = useState(null);
+
+  function handleSignOut() {
+    setUserProfile(null);
+    setActivePage('browse');
+  }
+
+  const handleDeleteProfile = () => {
+    callServer('DELETE', 'profile/' + userProfile.id, null, (res) => {
+      if (res.message === 'User Deleted successfully') {
+        alert('Profile Deleted');
+        setActivePage('browse');
+        setUserProfile(null);
+      } else {
+        alert('Server Error Try Again Later')
+      }
+    })
+  }
+
+  function login(profile) {
+    if (profile.message == 'Login failed') {
+      setLoginError('Login failed. Please try again.');
+    } else {
+      setUserProfile(profile);
+      toggleSignInPopup();
+      console.log(userProfile);
+    }
+  }
+
+  function accountCreated(res) {
+    console.log("Account created: ");
+    console.log(res);
+    if (res.message === 'User signed up successfully') {
+      alert('Sign up successful!');
+      setSignUpPopup(false);
+    } else if (res.message === 'Email already exists') {
+      alert('Account with this email already exists!');
+    } else {
+      alert('Sign up failed. Please Try again');
+    }
+  }
 
   const handlePageChange = (page) => {
-    setSignInPopup(false);
-    setSignUpPopup(false);
-    setActivePage(page);
+    if (userProfile == null && page != 'browse') {
+      setSignInPopup(true);
+    } else {
+      setSignInPopup(false);
+      setSignUpPopup(false);
+      setActivePage(page);
+    }
   };
 
   const toggleSignInPopup = () => {
     setSignUpPopup(false);
     setSignInPopup(!signInPopup);
+    setLoginError(''); // Reset login error message
   };
 
   const toggleSignUpPopup = () => {
@@ -70,32 +110,31 @@ function App() {
 
     const onSignIn = data => {
       console.log(data); // log all data
-      console.log('login/' + data.email +'/' + data.password);
-      callServer('GET', 'login/' + data.email +'/'+ data.password, null, login);
+      callServer('GET', 'login/' + data.email + '/' + data.password, null, login);
       // update hooks
-      setSignInPopup(false);
-
     }
 
     return (
       <div className="popup">
         <div className="popup-content">
+          <h2>Sign In</h2>
           {/* Sign-in form */}
           <form onSubmit={handleSubmit(onSignIn)} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* Form fields */}
-            <div className="col-md-6">
+            <div className="col-md-12">
               <label htmlFor="email" className="form-label">Email</label>
               <input {...register("email", { required: true })} type="email" className="form-control" id="email" placeholder="Email" />
               {errors.email && <p className="text-danger">Email is required.</p>}
             </div>
-            <div className="col-md-6">
+            <div className="col-md-12">
               <label htmlFor="Password" className="form-label">Password</label>
               <input {...register("password", { required: true })} type="password" className="form-control" id="password" placeholder="Password" />
               {errors.password && <p className="text-danger">Password is required</p>}
             </div>
-          <button type="submit">Sign In</button>
-          <button className="close-btn" onClick={toggleSignInPopup}>Close</button>
-          <button className="close-btn" onClick={toggleSignUpPopup}>Sign Up</button>
+            {loginError && <p className="text-danger">{loginError}</p>}
+            <button type="submit">Sign In</button>
+            <button className="close-btn" onClick={toggleSignInPopup}>Close</button>
+            <button className="close-btn" onClick={toggleSignUpPopup}>Sign Up</button>
           </form>
 
 
@@ -108,9 +147,9 @@ function App() {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const onCreateAccount = data => {
+      data.profilePicture = profileImage;
       console.log(data); // log all data
-      // update hooks
-      setSignUpPopup(false);
+      callServer('POST', "profile", data, accountCreated);
 
     }
 
@@ -133,6 +172,7 @@ function App() {
     return (
       <div className="popup">
         <div className="popup-content">
+          <h2>Create an Account</h2>
           {/* Sign-up form */}
           <form onSubmit={handleSubmit(onCreateAccount)} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* Form fields */}
@@ -141,22 +181,22 @@ function App() {
               <input {...register("profilePicture")} type="file" accept="image/*" className="form-control" id="profilePicture" onChange={handleProfileImageChange} />
               {profileImage && <img src={profileImage} alt="Profile" className="profile-preview" />}
             </div>
-            <div className="col-md-6">
+            <div className="col-md-12">
               <label htmlFor="fullName" className="form-label">Full Name</label>
               <input {...register("fullName", { required: true })} type="text" className="form-control" id="fullName" placeholder="Full Name" />
               {errors.fullName && <p className="text-danger">Full Name is required.</p>}
             </div>
-            <div className="col-md-6">
+            <div className="col-md-12">
               <label htmlFor="email" className="form-label">Email</label>
               <input {...register("email", { required: true, pattern: /^\S+@\S+$/i })} type="email" className="form-control" id="email" placeholder="Email" />
               {errors.email && <p className="text-danger">Email is required.</p>}
             </div>
-            <div className="col-md-6">
+            <div className="col-md-12">
               <label htmlFor="address" className="form-label">Address</label>
               <input {...register("address", { required: true })} type="text" className="form-control" id="address" placeholder="Address" />
               {errors.address && <p className="text-danger">Address is required.</p>}
             </div>
-            <div className="col-md-6">
+            <div className="col-md-12">
               <label htmlFor="Password" className="form-label">Password</label>
               <input {...register("password", { required: true, validate: validatePassword })} type="password" className="form-control" id="password" placeholder="Password" />
               {errors.password && <p className="text-danger">Password must be at least 6 characters long and contain at least one letter and one number</p>}
@@ -170,29 +210,51 @@ function App() {
     );
   }
 
-  function Header() {
+  function Header({ userProfile, handleSignOut }) {
+    const isSignedIn = userProfile !== null;
+    console.log(userProfile);
+    const handleSignInOut = () => {
+      if (isSignedIn) {
+        handleSignOut();
+      } else {
+        toggleSignInPopup();
+      }
+    }
+
     return (
       <header className="header">
         <div className="logo">
           <img src="./logo.png" alt="MarketPal Logo" style={{ width: '40px', height: 'auto' }} />
         </div>
         <nav className="navbar">
-          <button type="button" className="nav-link" onClick={toggleSignInPopup}>
-            <FaSignInAlt /> Sign In
-          </button>
-          <button className={activePage === 'browse' ? 'active' : ''} onClick={() => handlePageChange('browse')}>
-            <FaHome /> Browse
-          </button>
-          <button className={activePage === 'profile' ? 'active' : ''} onClick={() => handlePageChange('profile')}>
-            <FaUser /> Profile
-          </button>
-          <button className={activePage === 'messages' ? 'active' : ''} onClick={() => handlePageChange('messages')}>
-            <FaEnvelope /> Messages
-          </button>
-          <button className={activePage === 'create_post' ? 'active' : ''} onClick={() => handlePageChange('create_post')}>
-            <FaPlus /> Create Post
-          </button>
+          
+          <div className="nav-buttons">
+            <button className={activePage === 'browse' ? 'active' : ''} onClick={() => handlePageChange('browse')}>
+              <FaHome /> Browse
+            </button>
+            <button className={activePage === 'profile' ? 'active' : ''} onClick={() => handlePageChange('profile')}>
+              <FaUser /> Profile
+            </button>
+            <button className={activePage === 'messages' ? 'active' : ''} onClick={() => handlePageChange('messages')}>
+              <FaEnvelope /> Messages
+            </button>
+            <button className={activePage === 'create_post' ? 'active' : ''} onClick={() => handlePageChange('create_post')}>
+              <FaPlus /> Create Post
+            </button>
+            <button type="button" className="nav-link" onClick={handleSignInOut}>
+              {isSignedIn ? <FaSignInAlt /> : <FaSignOutAlt />} {isSignedIn ? 'Sign Out' : 'Sign In'}
+            </button>
+          </div>
         </nav>
+
+        {isSignedIn && (
+        <div className="profile-section">
+          <div className="profile-picture">
+            <img src={userProfile.profilePicture} alt="Profile" style={{ width: '40px', height: '40px', borderRadius: '25%' }} />
+          </div>
+          <div className="user-name">{userProfile.fullName}</div>
+        </div>
+      )}
       </header>
     );
   }
@@ -219,15 +281,15 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
+      <Header userProfile={userProfile} handleSignOut={handleSignOut} />
 
       {(signInPopup) && <SignIn />}
       {(signUpPopup) && <SignUp />}
       {(activePage === 'browse') && <Browse />}
-      {(activePage === 'profile') && <Profile userProfile={userProfile}/>}
+      {(activePage === 'profile') && <Profile userProfile={userProfile} onDeleteProfile={handleDeleteProfile} />}
       {(activePage === 'messages') && <Messages />}
       {(activePage === 'create_post') && <CreatePost />}
-      
+
       <Footer />
 
     </div>

@@ -84,9 +84,6 @@ function CreatePost() {
     }).then(response => response.json()).then(data => { alert('Post Added successfuly'); });
 }
 
-
-
-
   return (
     <div className="Create-Post">
       <div className="left-section">

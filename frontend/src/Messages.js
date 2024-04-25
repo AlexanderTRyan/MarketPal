@@ -7,10 +7,11 @@ function Messages({ userProfile }) {
   const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
   const [newMessage, setNewMessage] = useState('');
   const inputRef = useRef(null);
+  const messageContainerRef = useRef(null);
 
   useEffect(() => {
     if (inputRef.current) {
-    inputRef.current.focus();
+      inputRef.current.focus();
     }
 
     // Establish WebSocket connection when component mounts
@@ -22,6 +23,16 @@ function Messages({ userProfile }) {
       WebSocketService.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [selectedConversationIndex, conversations]);
+
+  const scrollToBottom = () => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+    }
+  };
 
   const handleNewMessage = (message) => {
     console.log(message);
@@ -36,8 +47,7 @@ function Messages({ userProfile }) {
         updatedConversations[selectedConversationIndex] = conversationToUpdate;
         return updatedConversations;
       });
-    }
-    
+    } 
   };
 
   const handleConversationClick = (index) => {
@@ -67,8 +77,6 @@ function Messages({ userProfile }) {
 
     setConversations(updatedConversations);
     setNewMessage('');
-
-
   };
 
   const ConversationList = () => {
@@ -96,19 +104,18 @@ function Messages({ userProfile }) {
       </div>
     );
   };
-  
 
   const MessageList = () => {
     const selectedConversation = conversations[selectedConversationIndex];
     const currentUser = userProfile.fullName;
-  
+
     // Check if selectedConversation is defined and has the messages property
     if (!selectedConversation || !selectedConversation.messages) {
       return <p>No messages available</p>;
     }
-  
+
     return (
-      <div className="message-card MessageList">
+      <div className="message-card MessageList" ref={messageContainerRef}>
         <h2>Messages</h2>
         <ul>
           {selectedConversation.messages.map((message, index) => (
@@ -130,8 +137,6 @@ function Messages({ userProfile }) {
       </div>
     );
   };
-  
-
 
   return (
     <div className="Messages">

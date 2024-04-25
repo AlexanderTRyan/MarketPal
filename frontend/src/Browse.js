@@ -20,6 +20,10 @@ function Browse({ userProfile }) {
   //Hook for the selected posts index.
   const [selectedPostIndex, setSelectedPostIndex] = useState(null);
 
+  const [sellerInfo, setSellerInfo] = useState(null);
+
+  const [search, setSearch] = useState('');
+
   //Using useEffect we are ensureing that the fetch is only being run 1 time 
   useEffect(() => {
     fetch("http://localhost:8081/listPosts")
@@ -36,6 +40,19 @@ function Browse({ userProfile }) {
   }, []);
 
 
+  function getSellerInfo(id) {
+    fetch("http://localhost:8081/profile/" + id)
+      .then(response => response.json())
+      .then(sellerProfile => {
+        setSellerInfo(sellerProfile);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }
+
+
+
   //Closes the popup when the close button is clicked
   const handleClosePopup = () => {
     setSelectedPost(null);
@@ -44,16 +61,17 @@ function Browse({ userProfile }) {
 
   //Displays the popup and sets the current post and the index. 
   const handlePostClick = (post, index) => {
+    getSellerInfo(post.userID);
     setSelectedPost(post);
     setSelectedPostIndex(index);
     setViewPostPopup(true);
-
+    console.log(sellerInfo);
   }
 
   const handleCategoryButtonClick = (category) => {
     let results = [];
     console.log("this is the cat:", category);
-    if (category != "All Listings") {
+    if (category !== "All Listings") {
       results = postCatalog.filter(allItems => {
         return allItems.category.toLowerCase().includes(category.toLowerCase());
       });
@@ -135,12 +153,17 @@ function Browse({ userProfile }) {
                 <h3 className='preview-info-h3'>Condition: {post.condition}</h3>
                 <p className='preview-info-h3'>{post.description}</p>
                 <hr />
+                {sellerInfo && (
+                  <div className='seller-info-pic'>
+                    <div>
+                      <h3 className='preview-info-h3'>Seller Information:</h3>
+                      <p className='preview-info-name'>{sellerInfo.fullName}</p>
+                      <p className='preview-info-email'>{sellerInfo.email}</p>
+                    </div>
+                    <img src={sellerInfo.profilePicture} alt="Profile Picture" className='seller-picture' />
+                  </div>
+                )}
 
-
-
-              </div>
-              <div>
-                <h3 className='preview-info-h3'>Seller Information:</h3>
               </div>
 
               <div className='bottom-preview'>
@@ -159,7 +182,7 @@ function Browse({ userProfile }) {
 
   //This is the overall list of posts that are displayed on the browse screen.
   const listPosts = sortedPostCatalog.map((post, index) => {
-    if (!userProfile || post.userID != userProfile.id) {
+    if (!userProfile || post.userID !== userProfile.id) {
       return (
         <div className='posts-div' key={index} onClick={() => handlePostClick(post, index)}>
           <div className="card">
@@ -179,7 +202,15 @@ function Browse({ userProfile }) {
     }
   });
 
+  const handleSearch = (event) => {
+    const searchText = event.target.value.toLowerCase();
+    setSearch(searchText);
 
+    setSortedPostCatalog(prevCatalog => {
+      if (searchText === "") return postCatalog; // Return the original array if search text is empty
+      return prevCatalog.filter(post => post.title.toLowerCase().includes(searchText));
+    });
+  }
   //List of the categorys from users to easily filter through items on the market.
   return (
     <div className="Browse">
@@ -194,8 +225,9 @@ function Browse({ userProfile }) {
 
         <div>
           <input className="search-bar"
-            type="search" placeholder="Search" />
+            type="search" placeholder="Search" value={search} onChange={handleSearch} />
         </div>
+
 
         <div className='category-buttons-div'>
           <h3 className='category-buttons-header'>Category</h3>

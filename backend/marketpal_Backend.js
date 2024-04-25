@@ -11,6 +11,11 @@ app.listen(port, () => {
     console.log("App listening at http://%s:%s", host, port);
 });
 
+
+// Configure body-parser with extended option and increased limit
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+
 const { MongoClient } = require("mongodb");
 
 // MongoDB

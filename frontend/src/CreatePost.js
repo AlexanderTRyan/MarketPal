@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 function CreatePost({ userProfile }) {
 
@@ -10,17 +10,16 @@ function CreatePost({ userProfile }) {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [condition, setCondition] = useState('');
-  const [profile, setProfile] = useState('');
+ 
 
   const fileInputRef = useRef(null);
 
   const handleitemImageChange = (e) => {
     const files = e.target.files;
     if (files) {
-      const imagesArray = Array.from(files).map((file) => URL.createObjectURL(file));
-      setItemImages([...itemImages, ...imagesArray]);
-    };
-
+      const urls = Array.from(files).map(file => URL.createObjectURL(file));
+      setItemImages(prevImages => [...prevImages, ...urls]);
+    }
   };
 
 
@@ -31,7 +30,7 @@ function CreatePost({ userProfile }) {
 
   const switchLeft = () => {
     let currIndex = imgIndex;
-    if (currIndex != 0) {
+    if (currIndex !== 0) {
       setImageIndex(--currIndex)
     }
   }
@@ -72,18 +71,18 @@ function CreatePost({ userProfile }) {
     fetch('http://localhost:8081/addPost', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(
-        {
-          "title": title,
-          "price": price,
-          "description": description,
-          "category": category,
-          "userID": userProfile.id,
-          "condition": condition,
-          "imageUrl": itemImages
-        }
-      )
+      body: JSON.stringify({
+        "title": title,
+        "price": price,
+        "description": description,
+        "category": category,
+        "userID": userProfile.id,
+        "condition": condition,
+        "imageUrl": itemImages
+      })
     }).then(response => response.json()).then(data => { alert('Post Added successfuly'); });
+  
+
   }
 
   return (
@@ -195,9 +194,7 @@ function CreatePost({ userProfile }) {
                   </div>
                   <img src={userProfile.profilePicture} alt="Profile Picture" className='seller-picture'/>
                 </div>
-                <div className='seller-name-div'>
-                  
-                </div>
+            
                   
                 <button className='publish-button' onClick={(addNewPost)}>Publish</button>
 

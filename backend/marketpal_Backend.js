@@ -50,8 +50,7 @@ app.get("/login/:email/:password", async (req, res) => {
 
     //console.log(newLogin);
 
-    const results = await db.collection("login")
-        .findOne(newLogin);
+    const results = await db.collection("login").findOne(newLogin);
 
     if (!results) {
         const failedLogin = {
@@ -166,8 +165,16 @@ app.put("/profile/:id", async (req, res) => {
     // Data for updating the document, typically comes from the request body
     console.log(req.body);
 
+    const curLogin = await db.collection('login').findOne(query);
+    if (curLogin.password !== req.body.oldPassword) {
+        return res.status(200).send({
+            message: 'Incorrect Password'
+        });
+
+    }
+
     const updateProfile = {
-        $set: {      
+        $set: {
             "id": id,
             "fullName": req.body.fullName,
             "email": req.body.email,
@@ -194,14 +201,18 @@ app.put("/profile/:id", async (req, res) => {
     if (loginResults.matchedCount === 0) {
         return res.status(404).send({ message: 'Login not found' });
     }
-    
+
     const profileUpdated = await db.collection("profiles").findOne(query);
 
 
-    res.status(200);
-    res.send(profileUpdated);
+    res.status(200).send({
+        message: "User updated successfully",
+        profile: profileResults,
+        login: loginResults
+    });
 });
 
+<<<<<<< HEAD
 app.get("/listPosts", async (req, res) => {
     await client.connect();
     console.log("Node connected successfully to GET MongoDB");
@@ -256,99 +267,145 @@ app.post("/addPost", async (req, res) => {
 //     res.status(200);
 //     res.send(results);
 // });
+=======
+//Web Socket for communication in the messages screen
+>>>>>>> main
 
-// app.get("/:id", async (req, res) => {
-//     const robotid = Number(req.params.id);
-//     console.log("Robot to find :", robotid);
-//     await client.connect();
-//     console.log("Node connected successfully to GET-id MongoDB");
-//     const query = { "id": robotid };
-//     const results = await db.collection("robot")
-//         .findOne(query);
-//     console.log("Results :", results);
-//     if (!results) res.send("Not Found").status(404);
-//     else res.send(results).status(200);
-// });
+const WebSocket = require('ws');
 
-// app.post("/addRobot", async (req, res) => {
-//     try {
-//         await client.connect();
-//         const keys = Object.keys(req.body);
-//         const values = Object.values(req.body);
+const wss = new WebSocket.Server({ port: 8080 });
 
-//         const newDocument = {
-//             "id": values[0], // also "id": req.body.id,
-//             "name": values[1], // also "name": req.body.name,
-//             "price": values[2], // also "price": req.body.price,
-//             "description": values[3], // also "description": req.body.description,
-//             "profilePictureUrl": values[4] // also "profilePictureUrl": req.body.profilePictureUrl
-//         };
-//         console.log(newDocument);
-
-//         const results = await db
-//             .collection("robot")
-//             .insertOne(newDocument);
-//         res.status(200);
-//         res.send(results);
-
-//         res.status(200);
-//         res.send(results);
-//     } catch (error) {
-//         console.error("An error occurred:", error);
-//         res.status(500).send({ error: 'An internal server error occurred' });
-//     }
-// });
-
-// app.delete("/deleteRobot/:id", async (req, res) => {
-//     try {
-//         const id = Number(req.params.id);
-//         await client.connect();
-//         console.log("Robot to delete :", id);
-//         const query = { id: id };
-//         // delete
-//         const robotDeleted = await db.collection("robot").findOne(query);
-//         res.send(robotDeleted);
-
-//         const results = await db.collection("robot").deleteOne(query);
-//         res.status(200);
-//         //res.send(results);
-//     }
-//     catch (error) {
-//         console.error("Error deleting robot:", error);
-//         res.status(500).send({ message: 'Internal Server Error' });
-//     }
-// });
-
-// app.put("/updateRobot/:id", async (req, res) => {
-//     const id = Number(req.params.id);
-//     const query = { id: id };
-//     await client.connect();
-//     console.log("Robot to Update :", id);
-//     // Data for updating the document, typically comes from the request body
-//     console.log(req.body);
-
-//     // read data from robot to update to send to frontend
-//     const robotUpdated = await db.collection("robot").findOne(query);
-
-//     res.send(robotUpdated);
-//     const updateData = {
-//         $set: {
-//             "name": req.body.name,
-//             "price": req.body.price,
-//             "description": req.body.description,
-//             "profilePictureUrl": req.body.profilePictureUrl
-//         }
-//     };
-//     // Add options if needed, for example { upsert: true } to create a document if it doesn't exist
-//     const options = {};
-//     const results = await db.collection("robot").updateOne(query, updateData, options);
-
-//     // If no document was found to update, you can choose to handle it by sending a 404 response
-//     if (results.matchedCount === 0) {
-//         return res.status(404).send({ message: 'Robot not found' });
-//     }
+// Array to store connected clients
+const clients = [];
 
 
-//     res.status(200);
-//     //res.send(results);
-// });
+// Function to establish a database connection and fetch conversations
+const getConversations = async (userId) => {
+    const client = new MongoClient(url);
+    try {
+        // Connect to the MongoDB server
+        await client.connect();
+
+        // Fetch conversations associated with the user ID
+        const conversations = await db.collection('messages').find({ users: { $elemMatch: { id: userId } } }).toArray();
+        return conversations;
+    } catch (error) {
+        console.error('Error fetching conversations:', error);
+        return [];
+    } finally {
+        // Close the database connection
+        await client.close();
+    }
+};
+
+// Function to send conversations to a client
+const sendConversations = async (ws, userId) => {
+    try {
+        // Fetch conversations associated with the user ID
+        const conversations = await getConversations(userId);
+
+        // Send conversations to the client
+        ws.send(JSON.stringify({ type: 'conversations', data: conversations }));
+    } catch (error) {
+        console.error('Error sending conversations to client:', error);
+    }
+};
+
+const updateConversation = async (message, convId) => {
+    const client = new MongoClient(url);
+    try {
+      await client.connect();
+      const query = { id: convId };
+  
+      const updateOperation = {
+        $push: {
+          messages: message
+        }
+      };
+  
+      const result = await client.db(dbName).collection("messages").updateOne(query, updateOperation);
+  
+      if (result.modifiedCount === 0) {
+        console.log("No conversation found with ID:", convId);
+      } else {
+        console.log("Message added to conversation with ID:", convId);
+      }
+  
+      return result;
+    } catch (error) {
+      console.error("Error updating conversation:", error);
+      return null; // Return null or handle the error as appropriate
+    } finally {
+      // Close the database connection
+      await client.close();
+    }
+  };
+
+// WebSocket server event listeners
+wss.on('connection', (ws, req) => {
+
+    const url = new URL(req.url, 'http://localhost:8080');
+    const userId = parseInt(url.searchParams.get('userId'));
+
+    // Add the userId to the WebSocket connection
+    ws.userId = userId;
+    console.log('Client connected ID: ' + userId);
+
+
+    // Add the new client to the clients array
+    clients.push(ws);
+
+    sendConversations(ws, userId);
+
+
+
+    // WebSocket message event listener
+    ws.on('message', async (message) => {
+        console.log('Received message:');
+        const parsedMessage = JSON.parse(message);
+        console.log(parsedMessage);
+
+        updateConversation(parsedMessage.message, parsedMessage.conversationId);
+
+        const conversation = await db.collection('messages').findOne({ id: parsedMessage.conversationId });
+        console.log(conversation);
+        if (!conversation) {
+            console.log('Conversation not found');
+            return;
+        }
+        console.log(conversation.users);
+
+        const recipient = conversation.users.find(user => user.name !== parsedMessage.message.sender);
+        console.log(recipient);
+        if (!recipient) {
+            console.log('Recipient not found');
+            return;
+        }
+
+        const recipientWs = clients.find(client => client.userId === recipient.id);
+        if (!recipientWs) {
+            console.log('Recipient WebSocket not connected');
+            return;
+        }
+
+        recipientWs.send(JSON.stringify({ type: 'message', data: parsedMessage.message }));
+
+        // Broadcast the received message to all clients
+        // wss.clients.forEach((client) => {
+        //     if (client !== ws && client.readyState === WebSocket.OPEN) {
+        //         client.send(JSON.stringify({ type: 'message', data: message}));
+        //     }
+        // });
+    });
+
+    // WebSocket close event listener
+    ws.on('close', () => {
+        console.log('Client disconnected');
+
+        // Remove the disconnected client from the clients array
+        const index = clients.indexOf(ws);
+        if (index !== -1) {
+            clients.splice(index, 1);
+        }
+    });
+});

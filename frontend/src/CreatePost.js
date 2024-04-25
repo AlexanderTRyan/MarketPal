@@ -78,6 +78,7 @@ function CreatePost({ userProfile }) {
           "price": price,
           "description": description,
           "category": category,
+          "userID": userProfile.id,
           "condition": condition,
           "imageUrl": itemImages
         }

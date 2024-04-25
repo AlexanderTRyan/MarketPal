@@ -352,3 +352,43 @@ wss.on('connection', (ws, req) => {
         }
     });
 });
+
+app.get("/listPosts", async (req, res) => {
+    await client.connect();
+    console.log("Node connected successfully to GET MongoDB");
+    const query = {};
+    const results = await db
+        .collection("Posts")
+        .find(query)
+        .limit(100)
+        .toArray();
+    console.log(results);
+    res.status(200);
+    res.send(results);
+});
+
+app.post("/addPost", async (req, res) => {
+        try {
+            await client.connect();
+            const keys = Object.keys(req.body);
+    
+            const newPost = {
+                "title": req.body.title, // also "name": req.body.name,
+                "price": req.body.price, // also "price": req.body.price,
+                "description": req.body.description, // also "description": req.body.description,
+                "category": req.body.category,
+                "condition": req.body.condition,
+                "imageUrl": req.body.imageUrl
+            };
+            console.log(newPost);
+    
+            const results = await db
+                .collection("Posts")
+                .insertOne(newPost);
+            res.status(200).send(results);
+            
+        } catch (error) {
+            console.error("An error occurred:", error);
+            res.status(500).send({ error: 'An internal server error occurred' });
+        }
+    });

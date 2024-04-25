@@ -1,7 +1,7 @@
 
 import React, { useState, useRef } from 'react';
-
-function CreatePost() {
+import './App.css';
+function CreatePost({ userProfile }) {
 
   const [itemImages, setItemImages] = useState([]);
   const [imgIndex, setImageIndex] = useState(0);
@@ -10,6 +10,7 @@ function CreatePost() {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [condition, setCondition] = useState('');
+  const [profile, setProfile] = useState('');
 
   const fileInputRef = useRef(null);
 
@@ -69,20 +70,20 @@ function CreatePost() {
 
   function addNewPost() {
     fetch('http://localhost:8081/addPost', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(
-            {
-              "title": title, 
-              "price": price, 
-              "description": description, 
-              "category": category,
-              "condition": condition,
-              "imageUrl": itemImages
-            }
-        )
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(
+        {
+          "title": title,
+          "price": price,
+          "description": description,
+          "category": category,
+          "condition": condition,
+          "imageUrl": itemImages
+        }
+      )
     }).then(response => response.json()).then(data => { alert('Post Added successfuly'); });
-}
+  }
 
   return (
     <div className="Create-Post">
@@ -173,7 +174,7 @@ function CreatePost() {
                 )}
                 <div>
                   <img src="https://img.icons8.com/?size=48&id=9NUOGb9gL5Wb&format=gif" alt="Left Arrow" onClick={switchLeft} className='img-arrow1' />
-                  <img src='https://img.icons8.com/?size=48&id=9NUOGb9gL5Wb&format=gif' alt="Right Arrow" onClick={switchRight} className='img-arrow2'/>
+                  <img src='https://img.icons8.com/?size=48&id=9NUOGb9gL5Wb&format=gif' alt="Right Arrow" onClick={switchRight} className='img-arrow2' />
                 </div>
               </div>
             </div>
@@ -185,9 +186,18 @@ function CreatePost() {
                 <h3 className='preview-info-h3'>Condition:     {condition}</h3>
                 <p className='preview-info-h3'>Description: {description}</p>
                 <hr />
-
-                <h3 className='preview-info-h3'>Seller Information:</h3>
-
+                <div className='seller-info-pic'>
+                  <div>
+                  <h3 className='preview-info-h3'>Seller Information:</h3>
+                  <p className='preview-info-name'>{userProfile.fullName}</p>
+                  <p className='preview-info-email'>{userProfile.email}</p>
+                  </div>
+                  <img src={userProfile.profilePicture} alt="Profile Picture" className='seller-picture'/>
+                </div>
+                <div className='seller-name-div'>
+                  
+                </div>
+                  
                 <button className='publish-button' onClick={(addNewPost)}>Publish</button>
 
 

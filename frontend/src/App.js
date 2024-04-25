@@ -301,7 +301,7 @@ function App() {
       {(activePage === 'browse') && <Browse />}
       {(activePage === 'profile') && <Profile userProfile={userProfile} onDeleteProfile={handleDeleteProfile} onUpdateProfile={handleUpdateProfile}/>}
       {(activePage === 'messages') && <Messages userProfile={userProfile}/>}
-      {(activePage === 'create_post') && <CreatePost />}
+      {(activePage === 'create_post') && <CreatePost userProfile={userProfile}/>}
 
       <Footer />
 

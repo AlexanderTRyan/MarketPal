@@ -104,3 +104,35 @@
 .ConversationList button:focus {
     outline: none;
 }
+
+.read-status {
+    color: #4CAF50; /* Green color for read status */
+    padding-right: 15px;
+}
+
+.unread-status {
+    color: #F44336; /* Red color for unread status */
+    padding-right: 15px;
+}
+
+.unread-indicator {
+    position: absolute;
+    top: 5px;
+    right: -10px;
+    background-color: #F44336; /* Red color for unread indicator */
+    color: #fff;
+    font-size: 0.8rem;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+
+.notification-count {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #f44336; /* Red color for notification count */
+    color: #fff;
+    font-size: 0.8rem;
+    padding: 2px 5px;
+    border-radius: 50%;
+}

@@ -18,7 +18,6 @@ function Messages({ userProfile }) {
     WebSocketService.connect(userProfile.id);
     WebSocketService.subscribeToMessages(handleNewMessage);
 
-
     return () => {
       // Close WebSocket connection when component unmounts
       WebSocketService.disconnect();
@@ -29,8 +28,6 @@ function Messages({ userProfile }) {
     scrollToBottom();
   }, [selectedConversationIndex, conversations]);
 
-
-
   const scrollToBottom = () => {
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
@@ -38,7 +35,6 @@ function Messages({ userProfile }) {
   };
 
   const handleNewMessage = async (message) => {
-    console.log(message);
     if (message.type === 'conversations') {
       try {
         const data = await message.data; // Wait for the Promise to resolve
@@ -48,49 +44,43 @@ function Messages({ userProfile }) {
         console.error('Error while fetching conversations:', error);
       }
     } else if (message.type === 'message') {
+      // Set read property to false for new incoming messages
+      message.data.read = false;
+
       // Update state with the new message
       setConversations(prevConversations => {
         const updatedConversations = [...prevConversations];
         const conversationToUpdate = { ...updatedConversations[selectedConversationIndex] };
         conversationToUpdate.messages = [...conversationToUpdate.messages, message.data];
-  
-        // Determine the index of the last read message
-        const lastReadIndex = conversationToUpdate.messages.findIndex(msg => msg.read);
-        // Send the index of the last read message along with the conversation
-        conversationToUpdate.lastReadIndex = lastReadIndex;
-  
+
         updatedConversations[selectedConversationIndex] = conversationToUpdate;
         return updatedConversations;
       });
     }
   };
-  
-  
+
   const updateReadMessages = (conversations) => {
     if (conversations[selectedConversationIndex]) {
-      console.log("updated read messages");
       const updatedConversations = [...conversations];
       const selectedConversation = updatedConversations[selectedConversationIndex];
-  
+
       if (selectedConversation && selectedConversation.messages) {
         selectedConversation.messages.forEach((message) => {
           if (!message.read && (message.sender !== userProfile.fullName)) {
             message.read = true;
             // Update the message's read status in the database
-            console.log(message);
             WebSocketService.sendMessage({ message, type: 'view' });
           }
         });
       }
-  
+
       setConversations(updatedConversations);
     }
   };
-  
 
   const handleConversationClick = (index) => {
     setSelectedConversationIndex(index);
-  
+
     // Check if conversations are available before updating read messages
     if (conversations.length > 0) {
       updateReadMessages(conversations);
@@ -133,11 +123,14 @@ function Messages({ userProfile }) {
             {conversations.map((conversation, index) => {
               // Find the other user's name in the conversation
               const otherUser = conversation.users.find(user => user.id !== userProfile.id);
+              // Count unread messages not from the current user
+              const unreadCount = conversation.messages.filter(message => !message.read && message.sender !== userProfile.fullName).length;
+
               // Display the other user's name if found
               return (
                 <li key={conversation.id}>
                   <button onClick={() => handleConversationClick(index)}>
-                    {otherUser ? otherUser.name : 'Unknown User'}
+                    {otherUser ? `${otherUser.name} (${unreadCount})` : 'Unknown User'} 
                   </button>
                 </li>
               );
@@ -169,7 +162,11 @@ function Messages({ userProfile }) {
               <div className="message-info">
                 <span className="message-sender">{message.sender}</span>
                 <span className="message-time">{new Date(message.time_sent).toLocaleString()}</span>
-                {index === selectedConversation.lastReadIndex && <span className="last-read-indicator">(Last Read)</span>}
+                {message.read ? (
+                  <span className="read-status">Read</span>
+                ) : (
+                  <span className="unread-status">Unread</span>
+                )}
               </div>
             </li>
           ))}
@@ -181,7 +178,6 @@ function Messages({ userProfile }) {
       </div>
     );
   };
-
 
   return (
     <div className="Messages">

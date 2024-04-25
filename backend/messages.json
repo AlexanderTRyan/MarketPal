@@ -12,8 +12,8 @@
       }
     ],
     "messages": [
-      { "text": "Hi there!", "sender": "Robot Two", "time_sent": "2024-04-24T12:00:00", "read": true },
-      { "text": "How are you?", "sender": "Robot One", "time_sent": "2024-04-24T12:01:00", "read": false }
+      { "id": "2asdfj", "text": "Hi there!", "sender": "Robot Two", "time_sent": "2024-04-24T12:00:00", "read": true },
+      { "id": "aalsdjfl", "text": "How are you?", "sender": "Robot One", "time_sent": "2024-04-24T12:01:00", "read": false }
     ]
   },
   {
@@ -29,8 +29,8 @@
       }
     ],
     "messages": [
-      { "text": "Hey!", "sender": "Robot Three", "time_sent": "2024-04-24T12:02:00", "read": true },
-      { "text": "I'm good, thanks.", "sender": "Robot Three", "time_sent": "2024-04-24T12:03:00", "read": false }
+      { "id": "asdlfjbasdbjl","text": "Hey!", "sender": "Robot Three", "time_sent": "2024-04-24T12:02:00", "read": true },
+      { "id": "asldjbfjl","text": "I'm good, thanks.", "sender": "Robot Three", "time_sent": "2024-04-24T12:03:00", "read": false }
     ]
   }
 ]

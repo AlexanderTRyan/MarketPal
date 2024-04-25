@@ -316,8 +316,9 @@ wss.on('connection', (ws, req) => {
             console.log('Conversation not found');
             return;
         }
+        console.log(conversation.users);
 
-        const recipient = conversation.users.find(user => user.id !== parsedMessage.message.senderId);
+        const recipient = conversation.users.find(user => user.name !== parsedMessage.message.sender);
         console.log(recipient);
         if (!recipient) {
             console.log('Recipient not found');
@@ -325,7 +326,6 @@ wss.on('connection', (ws, req) => {
         }
 
         const recipientWs = clients.find(client => client.userId === recipient.id);
-        console.log(recipientWs)
         if (!recipientWs) {
             console.log('Recipient WebSocket not connected');
             return;

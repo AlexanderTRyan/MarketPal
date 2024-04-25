@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './Messages.css'; // Import CSS file for styling
+import './messages.css'; // Import CSS file for styling
 import WebSocketService from './WebSocketService';
 
 function Messages({ userProfile }) {

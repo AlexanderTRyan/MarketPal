@@ -428,38 +428,97 @@ app.get("/listPosts", async (req, res) => {
         .find(query)
         .limit(100)
         .toArray();
-    console.log(results);
+    //console.log(results);
     res.status(200);
     res.send(results);
 });
 
-app.post("/addPost", async (req, res) => {
+app.get("/listPost/:userid", async (req, res) => {
     try {
         await client.connect();
-        const keys = Object.keys(req.body);
+        const userId = parseInt(req.params.userid);
 
-        const newPost = {
-            "title": req.body.title, // also "name": req.body.name,
-            "price": req.body.price, // also "price": req.body.price,
-            "description": req.body.description, // also "description": req.body.description,
-            "category": req.body.category,
-            "condition": req.body.condition,
-            "imageUrl": req.body.imageUrl
-        };
-        console.log(newPost);
-
+        // Find all posts by the specified user
+        const query = { userID: userId };
         const results = await db
             .collection("Posts")
-            .insertOne(newPost);
-        res.status(200).send(results);
+            .find(query)
+            .toArray();
 
+        // Send the results back to the client
+        res.status(200).send(results);
     } catch (error) {
         console.error("An error occurred:", error);
         res.status(500).send({ error: 'An internal server error occurred' });
     }
 });
 
+app.post("/addPost", async (req, res) => {
+        try {
+            await client.connect();
+            const keys = Object.keys(req.body);
+
+            const query = {};
+            const posts = await db
+                .collection("Posts")
+                .find(query)
+                .toArray();
+
+            let maxId = 0;
+            posts.forEach(post => {
+                if (post.id > maxId) {
+                    maxId = post.id;
+                }
+            });
+
+            // Generate a new unique ID
+            const newPostId = maxId + 1;
+    
+            const newPost = {
+                "id": newPostId,
+                "title": req.body.title, // also "name": req.body.name,
+                "price": req.body.price, // also "price": req.body.price,
+                "description": req.body.description, // also "description": req.body.description,
+                "category": req.body.category,
+                "userID": req.body.userID,
+                "condition": req.body.condition,
+                "imageUrl": req.body.imageUrl
+            };
+           // console.log(newPost);
+    
+            const results = await db
+                .collection("Posts")
+                .insertOne(newPost);
+            res.status(200).send(results);
+            
+        } catch (error) {
+            console.error("An error occurred:", error);
+            res.status(500).send({ error: 'An internal server error occurred' });
+        }
+    });
+
 const generateUniqueMessageId = () => {
     // Generate a unique ID using a timestamp and a random number
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 };
+
+app.delete("/post/:id", async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const query = { id: id };
+        await client.connect();
+        console.log(id);
+
+        // delete
+        const postDeleted = await db.collection("Posts").deleteOne(query);
+
+        res.status(200).send({
+            message: "Post Deleted successfully",
+            post: postDeleted,
+        });
+    }
+    catch (error) {
+        console.error("Error deleting post:", error);
+        res.status(500).send({ message: 'Internal Server Error' });
+    }
+});

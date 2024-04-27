@@ -352,6 +352,19 @@
 .preview-info-h3 {
   font-size: 18px;
   margin-bottom: 5px;
+  padding-top: 20px;
+}
+
+.preview-info-name{
+  font-size: 25px !important;
+  margin: 10px;
+  margin-top: 20px;
+}
+
+
+.preview-info-email{
+  font-size: 15px !important;
+  margin-left: 10px !important;
 }
 
 .preview-info p {
@@ -360,6 +373,30 @@
   margin-bottom: 20px;
   text-align: left;
 }
+
+
+
+.seller-picture {
+  width: 110px; /* Set the width and height to create a square container */
+  height: 110px;
+  border-radius: 50%; /* Make it a circle by setting border-radius to 50% */
+  border: 5px solid #343232; /* Add a border */
+  overflow: hidden; /* Ensure the image stays within the circular container */
+  margin-top: 25px;
+}
+
+.seller-picture img {
+  width: 100%; /* Make the image fill the circular container */
+  height: 100%;
+  object-fit: cover; /* Maintain aspect ratio and cover entire container */
+}
+
+.seller-info-pic{
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+
 
 .arrow-button {
   background-color: transparent;
@@ -391,12 +428,19 @@
 .publish-button {
   color: white;
   background-color: #1877f2;
-  width: 115px;
-  border-radius: 10%;
+  width: 130px;
+  border-radius: 17px; /* Increase border-radius for a smoother appearance */
   height: 40px;
-
+  margin-top: 30px;
+  border: none; /* Remove border for a cleaner look */
+  outline: none; /* Remove outline when button is focused */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition: background-color 0.3s ease; /* Add transition for smoother color change on hover */
 }
 
+.publish-button:hover {
+  background-color: #135e96; /* Darker color on hover */
+}
 
 
 

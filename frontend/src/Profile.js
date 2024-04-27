@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaEdit, FaSave, FaTimes, FaTrash } from 'react-icons/fa';
 
-function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
+function Profile({ userProfile, userPosts, onDeleteProfile, onUpdateProfile, onDeletePost }) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [isEditMode, setIsEditMode] = useState(false);
   const [tempProfile, setTempProfile] = useState(userProfile);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [deletePostIndex, setDeletePostIndex] = useState(null);
+
+  
+
 
   const toggleEditMode = () => {
     setIsEditMode(!isEditMode);
@@ -73,6 +77,19 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
       </div>
     );
   }
+
+  const handlePostClick = (index) => {
+    setDeletePostIndex(index);
+  }
+
+  const handleDeletePostConfirm = () => {
+    onDeletePost(deletePostIndex);
+    setDeletePostIndex(null);
+  };
+
+  const closeDeletePostPopup = () => {
+    setDeletePostIndex(null);
+  };
 
   return (
     <div className="container mt-5">
@@ -234,15 +251,55 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
                 </button>
               </div>
             )}
-                  <br></br>
-
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-header">
+              <h5>User Posts</h5>
+            </div>
+            <div className="card-body">    
+              {userPosts && userPosts.map((post,index) => (
+                <div className='posts-div' key={index} onClick={() => handlePostClick(post, index)}>
+                <div className="card">
+      
+                  {post.imageUrl && post.imageUrl.length > 0 && (
+                    <img className="bd-placeholder-img card-img-top max-width" height="225" src={post.imageUrl[post.imgIndex]} alt={post.title} />
+                  )}
+                  <div className="card-body">
+                    <p className="card-price">${parseFloat(post.price).toLocaleString()}</p>
+                    <p className="title-post">{post.title}</p>
+                    <p className="title-post">Condition: {post.condition}</p>
+      
+                  </div>
+                </div>
+              </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
       {showDeletePopup && <DeletePopup />}
-      <br></br>
+      {/* Delete Post Popup */}
+      {deletePostIndex !== null && (
+        <div className="popup">
+          <div className="popup-content">
+            <h2>Delete Post</h2>
+            <p>Are you sure you want to delete this post?</p>
+            <button className="btn btn-danger mr-2" onClick={handleDeletePostConfirm}>
+              <FaTrash /> Delete
+            </button>
+            <button className="btn btn-secondary" onClick={closeDeletePostPopup}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
+
+
+
 }
 
 export default Profile;

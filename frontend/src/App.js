@@ -12,7 +12,7 @@ import CreatePost from './CreatePost';
 const URL = 'http://localhost:8081';
 
 
-function callServer(method, extention, requestBody, handleResponse) {
+export function callServer(method, extention, requestBody, handleResponse) {
   fetch(`${URL}/${extention}`, {
     method: method,
     headers: {
@@ -42,10 +42,28 @@ function App() {
   const [signUpPopup, setSignUpPopup] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [userProfile, setUserProfile] = useState(null);
+  const [userPosts, setUserPosts] = useState([]);
+
 
   function handleSignOut() {
     setUserProfile(null);
     setActivePage('browse');
+  }
+
+  const handleDeletePost = (post) => {
+    callServer('DELETE', 'post/' + post.id, post, (res) => {
+      console.log(res);
+      if (res.message === 'Post Deleted successfully') {
+        alert('post Deleted');
+
+        const updatedPosts = userPosts.filter((p) => p.id !== post.id);
+        setUserPosts(updatedPosts);
+        setActivePage('browse');
+
+      } else {
+        alert('Server Error Try Again Later')
+      }
+    })
   }
 
   const handleDeleteProfile = () => {
@@ -80,6 +98,7 @@ function App() {
       setUserProfile(profile);
       toggleSignInPopup();
       console.log(userProfile);
+      getUserPosts(profile.id);
     }
   }
 
@@ -116,6 +135,14 @@ function App() {
     setSignInPopup(false);
     setSignUpPopup(!signUpPopup);
   };
+
+  function getUserPosts(id) {
+    callServer('GET', 'listPost/' + id, null, (res) => {
+      console.log(res);
+      setUserPosts(res);
+    })
+  }
+
 
 
   function SignIn() {
@@ -182,6 +209,7 @@ function App() {
       }
     };
 
+
     return (
       <div className="popup">
         <div className="popup-content">
@@ -240,7 +268,7 @@ function App() {
           <img src="./logo.png" alt="MarketPal Logo" style={{ width: '40px', height: 'auto' }} />
         </div>
         <nav className="navbar">
-          
+
           <div className="nav-buttons">
             <button className={activePage === 'browse' ? 'active' : ''} onClick={() => handlePageChange('browse')}>
               <FaHome /> Browse
@@ -261,13 +289,13 @@ function App() {
         </nav>
 
         {isSignedIn && (
-        <div className="profile-section">
-          <div className="profile-picture">
-            <img src={userProfile.profilePicture} alt="Profile" style={{ width: '40px', height: '40px', borderRadius: '25%' }} />
+          <div className="profile-section">
+            <div className="profile-picture">
+              <img src={userProfile.profilePicture} alt="Profile" style={{ width: '40px', height: '40px', borderRadius: '25%' }} />
+            </div>
+            <div className="user-name">{userProfile.fullName}</div>
           </div>
-          <div className="user-name">{userProfile.fullName}</div>
-        </div>
-      )}
+        )}
       </header>
     );
   }
@@ -298,10 +326,10 @@ function App() {
 
       {(signInPopup) && <SignIn />}
       {(signUpPopup) && <SignUp />}
-      {(activePage === 'browse') && <Browse />}
-      {(activePage === 'profile') && <Profile userProfile={userProfile} onDeleteProfile={handleDeleteProfile} onUpdateProfile={handleUpdateProfile}/>}
-      {(activePage === 'messages') && <Messages userProfile={userProfile}/>}
-      {(activePage === 'create_post') && <CreatePost />}
+      {(activePage === 'browse') && <Browse userProfile={userProfile} />}
+      {(activePage === 'profile') && <Profile userProfile={userProfile} userPosts={userPosts} onDeleteProfile={handleDeleteProfile} onUpdateProfile={handleUpdateProfile} onDeletePost={handleDeletePost} />}
+      {(activePage === 'messages') && <Messages userProfile={userProfile} />}
+      {(activePage === 'create_post') && <CreatePost userProfile={userProfile} />}
 
       <Footer />
 

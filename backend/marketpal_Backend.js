@@ -415,3 +415,24 @@ app.post("/addPost", async (req, res) => {
             res.status(500).send({ error: 'An internal server error occurred' });
         }
     });
+
+    app.delete("/Posts/:id", async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            console.log("Post to delete :", id);
+            await client.connect();
+            console.log("Post to delete :", id);
+            const query = { id: id };
+            // delete
+            const postDeleted = await db.collection("Posts").deleteOne(query);
+    
+            res.status(200).send({
+                message: "Post Deleted successfully",
+                post: postDeleted,
+            });
+        }
+        catch (error) {
+            console.error("Error deleting robot:", error);
+            res.status(500).send({ message: 'Internal Server Error' });
+        }
+    });

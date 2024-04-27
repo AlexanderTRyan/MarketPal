@@ -419,10 +419,18 @@
   margin-right: 40px;
 }
 
+.img-arrow1:hover{
+  filter: hue-rotate(320deg);
+}
+
 .img-arrow2 {
   margin: 10px;
   transform: rotate(180deg);
   margin-left: 40px;
+}
+
+.img-arrow2:hover{
+  filter: hue-rotate(320deg);
 }
 
 .publish-button {
@@ -454,9 +462,6 @@
   /* Adjust the gap between sections as needed */
 }
 
-.left-section-browse {
-
-}
 
 .middle-section-browse {
 
@@ -659,19 +664,37 @@ h1 em {
   position: relative;
 }
 
+
 .popup-close-button{
   display: flex;
   align-items: right;
   justify-content: right;
+ 
 }
 
 .close-button{
-  width: 45px;
+  width: 50px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  padding: 0;
 }
 
-.close-button:hover{
-  width: 50px;
+.Message-button{
+  width: 150px;
+  border-radius: 30px;
+  background-color: #49f04f; /* Green color */
+  color: white; /* Text color */
+  border: none; /* Remove border */
+  padding: 10px 20px; /* Add padding */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition: background-color 0.3s; /* Smooth transition for background color change */
 }
+
+
+.Message-button:hover {
+  background-color: #45a049; /* Darker shade of green on hover */
+}
+
 
 .nav-buttons {
   display: flex;
@@ -694,4 +717,34 @@ h1 em {
 
 .user-name {
   font-size: 16px; /* Adjust font size as needed */
+}
+
+.posts-div-profile{
+  width: 300px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.card-profile {
+  border: solid 1px #ccc; /* Add a border to visually separate cards */
+  border-radius: 8px; /* Add rounded corners for a cleaner look */
+  background-color: #fff; /* Add a background color to the card */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+}
+
+.current-posts-h1{
+  font-size: 28px;
+  font-weight: bold;
+  color: #333; /* You can adjust the color as needed */
+  margin-bottom: 20px; /* Add some spacing below the heading */
+}
+
+.close-button-profile-div{
+  display: flex !important;
+  align-items: right !important;
+  justify-content: right !important;
+}
+.close-button-profile{
+  width: 35px;
+  cursor: pointer;
 }

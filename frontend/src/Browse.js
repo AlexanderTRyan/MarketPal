@@ -129,8 +129,8 @@ function Browse({ userProfile }) {
       <div className='popup-overlay'>
         <div className='popup-content'>
           <div className='popup-close-button'>
-            <div className='popup-close-button-hover'>
-              <img src="https://img.icons8.com/?size=80&id=114052&format=png" onClick={handleClosePopup} alt="Exit Button" className='close-button' />
+            <div>
+              <img src="https://img.icons8.com/?size=48&id=13903&format=png" alt="Exit Button" onClick={handleClosePopup} className='close-button' />
             </div>
           </div>
           <div className="preview-div">
@@ -168,7 +168,7 @@ function Browse({ userProfile }) {
 
               <div className='bottom-preview'>
                 <div className='bottom-preview-right'>
-                  <button>Message</button>
+                  <button className='Message-button'>Message</button>
                 </div>
               </div>
             </div>

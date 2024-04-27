@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useForm } from 'react-hook-form';
 import { FaEdit, FaSave, FaTimes, FaTrash } from 'react-icons/fa';
 
@@ -7,6 +7,16 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [tempProfile, setTempProfile] = useState(userProfile);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [showDeletePostPopup, setShowDeletePostPopup] = useState(false);
+
+   //Hook to track and unpdate the post Catalog. Holds all of the posts.
+   const [postCatalog, setPostCatalog] = useState([]);
+
+   //Created for sorting purposes. We can't change postCatalog when sorting or we would destroy data. 
+   const [sortedPostCatalog, setSortedPostCatalog] = useState([]);
+
+   const [postToDelete, setPostToDelete] = useState('');
+ 
 
   const toggleEditMode = () => {
     setIsEditMode(!isEditMode);
@@ -30,6 +40,21 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
       reader.readAsDataURL(file);
     }
   };
+
+
+  function deletePost() {
+    // Fetch the value from the input field
+    let id = postToDelete.id;
+    console.log(id);
+    fetch(`http://localhost:8081/Posts/${id}`, {
+        method: 'DELETE',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(
+            { "id": id }
+        )
+    })
+        .then(response => response.json());
+  }
 
   const cancelChanges = () => {
     setIsEditMode(false);
@@ -57,13 +82,130 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
     setShowDeletePopup(false);
   };
 
+  const confirmDeletePost = (post) => {
+    setShowDeletePostPopup(true);
+    setPostToDelete(post);
+  };
+
+  const closeDeletePostPopup = () => {
+    setShowDeletePostPopup(false);
+  };
+
+  const handlePostDeletion = () =>{
+    setShowDeletePostPopup(false);
+    deletePost();
+
+      let postArray = [...sortedPostCatalog];
+      postArray = postArray.filter((removePost) => removePost.id !== postToDelete.id);
+      setSortedPostCatalog(postArray);
+  }
+
+  function DeletePostPopup() {
+    return (
+      <div className="popup">
+        <div className="popup-content">
+          <h2>Delete {postToDelete.title} Post</h2>
+          <p>Are you sure you want to delete this post</p>
+          <button className="btn btn-danger mr-2" onClick={() => handlePostDeletion()}>
+            <FaTrash /> Delete
+          </button>
+          <button className="btn btn-secondary" onClick={closeDeletePostPopup}>
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+ 
+
+  useEffect(() => {
+    fetch("http://localhost:8081/listPosts")
+      .then(response => response.json())
+      //imgIndex: 0 tells us the code to display img at index 0 by default
+      .then(posts => {
+        const postsWithIndex = posts.map(post => ({ ...post, imgIndex: 0 }));
+        setPostCatalog(postsWithIndex);
+        setSortedPostCatalog(postsWithIndex);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  const listPosts = sortedPostCatalog.map((post, index) => {
+
+
+    const switchLeft = () => {
+      setSortedPostCatalog(prevCatalog => {
+        //Copy of the postCatalog
+        const updatedCatalog = [...prevCatalog];
+        //index is what post you are looking at in the postCatalog
+        //imgIndex is the index of the image array within the current post.
+        if (updatedCatalog[index].imgIndex === 0) {
+          updatedCatalog[index].imgIndex = updatedCatalog[index].imageUrl.length - 1;
+        }
+        else {
+          updatedCatalog[index].imgIndex--;
+        }
+        return updatedCatalog;
+      });
+    };
+  
+  
+    //Allows user to click through the photes by clicking the right button.
+    const switchRight = () => {
+      setSortedPostCatalog(prevCatalog => {
+        const updatedCatalog = [...prevCatalog];
+        if (updatedCatalog[index].imageUrl.length - 1 === updatedCatalog[index].imgIndex) {
+          updatedCatalog[index].imgIndex = 0;
+        }
+        else {
+          updatedCatalog[index].imgIndex++;
+        }
+        return updatedCatalog;
+      });
+    };
+
+    
+
+    if (!userProfile || post.userID === userProfile.id) {
+      console.log(post.id);
+      return (
+        <div className='posts-div-profile' key={index}>
+          <div className="card-profile">
+          <div className='close-button-profile-div'>
+              <img src="https://img.icons8.com/?size=48&id=13903&format=png" alt="Exit Button" onClick={() => confirmDeletePost(post)} className='close-button-profile' />
+            </div>
+            {post.imageUrl && post.imageUrl.length > 0 && (
+              <img className="bd-placeholder-img card-img-top" height="225" src={post.imageUrl[post.imgIndex]} alt={post.title} />
+            )}
+             <div>
+                  <img src="https://img.icons8.com/?size=48&id=19175&format=png" alt="Left Arrow" onClick={switchLeft} className='img-arrow1' />
+                  <img src='https://img.icons8.com/?size=48&id=19175&format=png' alt="Right Arrow" onClick={switchRight} className='img-arrow2' />
+                </div>
+            <div className="card-body">
+              <p className="card-price">${parseFloat(post.price).toLocaleString()}</p>
+              <p className="title-post">{post.title}</p>
+              <p className="title-post">Condition: {post.condition}</p>
+
+            </div>
+          </div>
+        </div>
+      );
+    }
+  });
+
+
+
+
   function DeletePopup() {
     return (
       <div className="popup">
         <div className="popup-content">
           <h2>Delete Profile</h2>
           <p>Are you sure you want to delete your profile?</p>
-          <button className="btn btn-danger mr-2" onClick={handleDeleteConfirm}>
+          <button className="btn btn-danger mr-2" onClick={() => handleDeleteConfirm()}>
             <FaTrash /> Delete
           </button>
           <button className="btn btn-secondary" onClick={closeDeletePopup}>
@@ -90,7 +232,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
             <div className="card-body">
               <div className="mb-3">
                 <label htmlFor="profilePicture" className="form-label">
-                  Profile Picture
+                 
                 </label>
                 {isEditMode ? (
                   <>
@@ -116,7 +258,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
                     src={tempProfile.profilePicture}
                     alt="Profile"
                     className="img-fluid"
-                    style={{ borderRadius: '50%', width: '150px', height: '150px' }}
+                    style={{ borderRadius: '50%', width: '150px', height: '150px' , border: 'solid 3px'}}
                   />
                 )}
               </div>
@@ -238,8 +380,15 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
 
           </div>
         </div>
+        <div className="col-md-6">
+          <h1 className='current-posts-h1'>Current Posts</h1>
+        <div className='row'>
+          {listPosts}
+        </div>
+        </div>
       </div>
       {showDeletePopup && <DeletePopup />}
+      {showDeletePostPopup && <DeletePostPopup/>}
       <br></br>
     </div>
   );

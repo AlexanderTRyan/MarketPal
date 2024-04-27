@@ -88,7 +88,7 @@
 }
 
 .ConversationList button {
-    width: 100%;
+    width: 80%;
     padding: 10px;
     background-color: #f0f0f0;
     border: none;
@@ -135,4 +135,22 @@
     font-size: 0.8rem;
     padding: 2px 5px;
     border-radius: 50%;
+}
+
+.ConversationList .delete-button {
+    width: auto;
+    padding: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 5px;
+    height: 10%;
+  }
+  
+  .ConversationList .delete-button i {
+    font-size: 0.8rem;
+    color: #999;
+  }
+  .ConversationList .delete-button:hover {
+    background-color: #FF6347;
 }

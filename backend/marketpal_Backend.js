@@ -136,8 +136,22 @@ app.delete("/profile/:id", async (req, res) => {
     try {
         const id = Number(req.params.id);
         await client.connect();
+
+        const conversations = await db.collection("messages").find({}).toArray();
+
         console.log("Profile to delete :", id);
         const query = { id: id };
+
+
+        for (const conversation of conversations) {
+            // Check if the user to be deleted is present in the conversation
+            const userIndex = conversation.users.findIndex(user => user.id === id);
+            if (userIndex !== -1) {
+                // Update the conversation in the 'messages' collection
+                await db.collection("messages").deleteOne({ id: conversation.id });
+            }
+        }
+
         // delete
         const profileDeleted = await db.collection("profiles").deleteOne(query);
 

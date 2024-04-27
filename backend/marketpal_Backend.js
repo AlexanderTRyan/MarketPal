@@ -522,3 +522,63 @@ app.delete("/post/:id", async (req, res) => {
         res.status(500).send({ message: 'Internal Server Error' });
     }
 });
+
+app.post("/message", async (req, res) => {
+    try {
+        await client.connect();
+
+        const query = {};
+        const conversations = await db
+            .collection("messages")
+            .find(query)
+            .toArray();
+
+        let maxId = 0;
+        conversations.forEach(post => {
+            if (post.id > maxId) {
+                maxId = post.id;
+            }
+        });
+
+        // Generate a new unique ID
+        const newPostId = maxId + 1;
+
+        const user1 = await db.collection("profiles").findOne({ id: parseInt(req.body.userID1) });
+        const user2 = await db.collection("profiles").findOne({ id: parseInt(req.body.userID2) });
+
+        console.log(req.body.userID1)
+        console.log(user2)
+        if (!user1 || !user2) {
+            return res.status(404).send({ error: "One or both users not found" });
+        }
+
+        const newUsers = [
+            {
+                id: user1.id,
+                name: user1.fullName
+            },
+            {
+                id: user2.id,
+                name: user2.fullName
+            }
+        ];
+
+        
+
+        const newPost = {
+            "id": newPostId,
+            "users": newUsers,
+            "messages": []
+        };
+       // console.log(newPost);
+
+        const results = await db
+            .collection("messages")
+            .insertOne(newPost);
+        res.status(200).send({results: results, message: "success"});
+        
+    } catch (error) {
+        console.error("An error occurred:", error);
+        res.status(500).send({ error: 'An internal server error occurred' });
+    }
+});

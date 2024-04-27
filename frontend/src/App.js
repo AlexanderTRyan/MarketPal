@@ -125,6 +125,28 @@ function App() {
     }
   };
 
+  const onMessageClick = (id) => {
+
+    if (!userProfile) {
+      setSignInPopup(true);
+    } else {
+
+      console.log("create message to" + id);
+
+      const requestBody = {
+        userID1: id,
+        userID2: userProfile.id
+      };
+      callServer('POST', 'message', requestBody, (res) => {
+        if (res.message === 'success') {
+          alert('conversation created!')
+        } else {
+          alert('server error try again');
+        }
+      })
+    }
+  }
+
   const toggleSignInPopup = () => {
     setSignUpPopup(false);
     setSignInPopup(!signInPopup);
@@ -137,6 +159,7 @@ function App() {
   };
 
   function getUserPosts(id) {
+
     callServer('GET', 'listPost/' + id, null, (res) => {
       console.log(res);
       setUserPosts(res);
@@ -326,7 +349,7 @@ function App() {
 
       {(signInPopup) && <SignIn />}
       {(signUpPopup) && <SignUp />}
-      {(activePage === 'browse') && <Browse userProfile={userProfile} />}
+      {(activePage === 'browse') && <Browse userProfile={userProfile} onMessageClick={onMessageClick} />}
       {(activePage === 'profile') && <Profile userProfile={userProfile} userPosts={userPosts} onDeleteProfile={handleDeleteProfile} onUpdateProfile={handleUpdateProfile} onDeletePost={handleDeletePost} />}
       {(activePage === 'messages') && <Messages userProfile={userProfile} />}
       {(activePage === 'create_post') && <CreatePost userProfile={userProfile} />}

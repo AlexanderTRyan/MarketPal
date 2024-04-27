@@ -87,6 +87,22 @@ function Messages({ userProfile }) {
     }
   };
 
+  const handleDeleteConversation = (conversationId) => {
+    // Send WebSocket message for deletion
+    WebSocketService.sendMessage({ conversationId, type: 'delete' });
+  
+    // Remove the conversation locally
+    setConversations(prevConversations => {
+      return prevConversations.filter(conversation => conversation.id !== conversationId);
+    });
+  
+    // If the deleted conversation was selected, reset selectedConversationIndex
+    if (selectedConversationIndex === conversations.findIndex(conv => conv.id === conversationId)) {
+      setSelectedConversationIndex(0);
+    }
+  };
+  
+
   const handleInputChange = (event) => {
     setNewMessage(event.target.value);
   };
@@ -130,8 +146,9 @@ function Messages({ userProfile }) {
               return (
                 <li key={conversation.id}>
                   <button onClick={() => handleConversationClick(index)}>
-                    {otherUser ? `${otherUser.name} (${unreadCount})` : 'Unknown User'} 
+                    {otherUser ? `${otherUser.name} (${unreadCount})` : 'Unknown User'}
                   </button>
+                  <button onClick={() => handleDeleteConversation(conversation.id)}>Delete</button>
                 </li>
               );
             })}

@@ -373,6 +373,14 @@ wss.on('connection', (ws, req) => {
             }
 
             recipientWs.send(JSON.stringify({ type: 'message', data: parsedMessage.message }));
+        } else if (parsedMessage.type === 'delete') {
+            const id = parsedMessage.conversationId;
+            console.log("Conversation to delete :", id);
+            const query = { id: id };
+
+            const convDeleted = await db.collection("messages").deleteOne(query);
+            console.log(convDeleted);
+
         }
 
         // Broadcast the received message to all clients

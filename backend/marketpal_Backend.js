@@ -152,6 +152,10 @@ app.delete("/profile/:id", async (req, res) => {
             }
         }
 
+        
+        await db.collection("Posts").deleteMany({userID: id});
+        
+
         // delete
         const profileDeleted = await db.collection("profiles").deleteOne(query);
 

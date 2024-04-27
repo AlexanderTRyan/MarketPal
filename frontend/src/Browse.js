@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 
-function Browse() {
+function Browse({ userProfile }) {
 
 
 
@@ -112,7 +112,7 @@ function Browse() {
         <div className='popup-content'>
           <div className='popup-close-button'>
             <div className='popup-close-button-hover'>
-            <img src="https://img.icons8.com/?size=80&id=114052&format=png" onClick={handleClosePopup} alt="Exit Button" className='close-button'/>
+              <img src="https://img.icons8.com/?size=80&id=114052&format=png" onClick={handleClosePopup} alt="Exit Button" className='close-button' />
             </div>
           </div>
           <div className="preview-div">
@@ -159,24 +159,26 @@ function Browse() {
 
   //This is the overall list of posts that are displayed on the browse screen.
   const listPosts = sortedPostCatalog.map((post, index) => {
+    if (!userProfile || post.userID != userProfile.id) {
+      return (
+        <div className='posts-div' key={index} onClick={() => handlePostClick(post, index)}>
+          <div className="card">
 
-    return (
-      <div className='posts-div' key={index} onClick={() => handlePostClick(post, index)}>
-        <div className="card">
+            {post.imageUrl && post.imageUrl.length > 0 && (
+              <img className="bd-placeholder-img card-img-top max-width" height="225" src={post.imageUrl[post.imgIndex]} alt={post.title} />
+            )}
+            <div className="card-body">
+              <p className="card-price">${parseFloat(post.price).toLocaleString()}</p>
+              <p className="title-post">{post.title}</p>
+              <p className="title-post">Condition: {post.condition}</p>
 
-          {post.imageUrl && post.imageUrl.length > 0 && (
-            <img className="bd-placeholder-img card-img-top max-width" height="225" src={post.imageUrl[post.imgIndex]} alt={post.title} />
-          )}
-          <div className="card-body">
-            <p className="card-price">${parseFloat(post.price).toLocaleString()}</p>
-            <p className="title-post">{post.title}</p>
-            <p className="title-post">Condition: {post.condition}</p>
-
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
   });
+
 
   //List of the categorys from users to easily filter through items on the market.
   return (

@@ -371,12 +371,30 @@ app.post("/addPost", async (req, res) => {
         try {
             await client.connect();
             const keys = Object.keys(req.body);
+
+            const query = {};
+            const posts = await db
+                .collection("Posts")
+                .find(query)
+                .toArray();
+
+            let maxId = 0;
+            posts.forEach(post => {
+                if (post.id > maxId) {
+                    maxId = post.id;
+                }
+            });
+
+            // Generate a new unique ID
+            const newPostId = maxId + 1;
     
             const newPost = {
+                "id": newPostId,
                 "title": req.body.title, // also "name": req.body.name,
                 "price": req.body.price, // also "price": req.body.price,
                 "description": req.body.description, // also "description": req.body.description,
                 "category": req.body.category,
+                "userID": req.body.userID,
                 "condition": req.body.condition,
                 "imageUrl": req.body.imageUrl
             };

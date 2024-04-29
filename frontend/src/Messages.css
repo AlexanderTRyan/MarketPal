@@ -88,7 +88,7 @@
 }
 
 .ConversationList button {
-    width: 100%;
+    width: 80%;
     padding: 10px;
     background-color: #f0f0f0;
     border: none;
@@ -103,4 +103,54 @@
 
 .ConversationList button:focus {
     outline: none;
+}
+
+.read-status {
+    color: #4CAF50; /* Green color for read status */
+    padding-right: 15px;
+}
+
+.unread-status {
+    color: #F44336; /* Red color for unread status */
+    padding-right: 15px;
+}
+
+.unread-indicator {
+    position: absolute;
+    top: 5px;
+    right: -10px;
+    background-color: #F44336; /* Red color for unread indicator */
+    color: #fff;
+    font-size: 0.8rem;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+
+.notification-count {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #f44336; /* Red color for notification count */
+    color: #fff;
+    font-size: 0.8rem;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+
+.ConversationList .delete-button {
+    width: auto;
+    padding: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 5px;
+    height: 10%;
+  }
+  
+  .ConversationList .delete-button i {
+    font-size: 0.8rem;
+    color: #999;
+  }
+  .ConversationList .delete-button:hover {
+    background-color: #FF6347;
 }

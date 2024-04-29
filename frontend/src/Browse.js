@@ -127,13 +127,13 @@ function Browse({ userProfile }) {
     //Returns the popup and the content from the post. 
     return (
       <div className='popup-overlay'>
-        <div className='popup-content'>
+        <div className='popup-content-browse'>
           <div className='popup-close-button'>
             <div>
               <img src="https://img.icons8.com/?size=48&id=13903&format=png" alt="Exit Button" onClick={handleClosePopup} className='close-button' />
             </div>
           </div>
-          <div className="preview-div">
+          <div className="preview-div-browse">
             <div>
               <div className='img-preview-div-popup'>
                 {post.imageUrl && post.imageUrl.length > 0 && (
@@ -185,7 +185,7 @@ function Browse({ userProfile }) {
     if (!userProfile || post.userID !== userProfile.id) {
       return (
         <div className='posts-div' key={index} onClick={() => handlePostClick(post, index)}>
-          <div className="card">
+          <div className="card-browse">
 
             {post.imageUrl && post.imageUrl.length > 0 && (
               <img className="bd-placeholder-img card-img-top max-width" height="225" src={post.imageUrl[post.imgIndex]} alt={post.title} />

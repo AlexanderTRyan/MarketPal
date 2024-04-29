@@ -10,7 +10,7 @@ function CreatePost({ userProfile }) {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [condition, setCondition] = useState('');
- 
+
 
   const fileInputRef = useRef(null);
 
@@ -81,7 +81,7 @@ function CreatePost({ userProfile }) {
         "imageUrl": itemImages
       })
     }).then(response => response.json()).then(data => { alert('Post Added successfuly'); });
-  
+
 
   }
 
@@ -172,10 +172,12 @@ function CreatePost({ userProfile }) {
                 {itemImages.length > 0 && (
                   <img src={itemImages[imgIndex]} alt={`Image 1`} className="preview-img" />
                 )}
-                <div>
-                  <img src="https://img.icons8.com/?size=48&id=9NUOGb9gL5Wb&format=gif" alt="Left Arrow" onClick={switchLeft} className='img-arrow1' />
-                  <img src='https://img.icons8.com/?size=48&id=9NUOGb9gL5Wb&format=gif' alt="Right Arrow" onClick={switchRight} className='img-arrow2' />
-                </div>
+                {itemImages.length > 0 && (
+                  <>
+                    <img src="https://img.icons8.com/?size=48&id=9NUOGb9gL5Wb&format=gif" alt="Left Arrow" onClick={switchLeft} className='img-arrow1' />
+                    <img src='https://img.icons8.com/?size=48&id=9NUOGb9gL5Wb&format=gif' alt="Right Arrow" onClick={switchRight} className='img-arrow2' />
+                  </>
+                )}
               </div>
             </div>
 
@@ -188,14 +190,14 @@ function CreatePost({ userProfile }) {
                 <hr />
                 <div className='seller-info-pic'>
                   <div>
-                  <h3 className='preview-info-h3'>Seller Information:</h3>
-                  <p className='preview-info-name'>{userProfile.fullName}</p>
-                  <p className='preview-info-email'>{userProfile.email}</p>
+                    <h3 className='preview-info-h3'>Seller Information:</h3>
+                    <p className='preview-info-name'>{userProfile.fullName}</p>
+                    <p className='preview-info-email'>{userProfile.email}</p>
                   </div>
-                  <img src={userProfile.profilePicture} alt="Profile Picture" className='seller-picture'/>
+                  <img src={userProfile.profilePicture} alt="Profile Picture" className='seller-picture' />
                 </div>
-            
-                  
+
+
                 <button className='publish-button' onClick={(addNewPost)}>Publish</button>
 
 
@@ -214,10 +216,3 @@ function CreatePost({ userProfile }) {
 
 export default CreatePost;
 
-//TODO
-/*
-1. Change length of inputs
-2. Fix the images to be able to add more than one.
-3. Change the format of the dropdowns
-4. Remove the arrow on the right of the screen
-*/

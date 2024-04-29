@@ -1,5 +1,6 @@
-import React, { useState, useEffect} from 'react';
-import { useForm } from 'react-hook-form';
+import { list } from 'firebase/storage';
+import React, { useState, useEffect } from 'react';
+import { get, useForm } from 'react-hook-form';
 import { FaEdit, FaSave, FaTimes, FaTrash } from 'react-icons/fa';
 
 function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
@@ -8,15 +9,18 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
   const [tempProfile, setTempProfile] = useState(userProfile);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [showDeletePostPopup, setShowDeletePostPopup] = useState(false);
+  const [tempIndex, setTempIndex] = useState('');
+  const [previousIndex, setPreviousIndex] = useState(0);
+  const [userPosts, setUserPosts] = useState([]);
 
-   //Hook to track and unpdate the post Catalog. Holds all of the posts.
-   const [postCatalog, setPostCatalog] = useState([]);
+  //Hook to track and unpdate the post Catalog. Holds all of the posts.
+  const [postCatalog, setPostCatalog] = useState([]);
 
-   //Created for sorting purposes. We can't change postCatalog when sorting or we would destroy data. 
-   const [sortedPostCatalog, setSortedPostCatalog] = useState([]);
+  //Created for sorting purposes. We can't change postCatalog when sorting or we would destroy data. 
+  const [sortedPostCatalog, setSortedPostCatalog] = useState([]);
 
-   const [postToDelete, setPostToDelete] = useState('');
- 
+  const [postToDelete, setPostToDelete] = useState('');
+
 
   const toggleEditMode = () => {
     setIsEditMode(!isEditMode);
@@ -47,13 +51,13 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
     let id = postToDelete.id;
     console.log(id);
     fetch(`http://localhost:8081/Posts/${id}`, {
-        method: 'DELETE',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(
-            { "id": id }
-        )
+      method: 'DELETE',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(
+        { "id": id }
+      )
     })
-        .then(response => response.json());
+      .then(response => response.json());
   }
 
   const cancelChanges = () => {
@@ -91,13 +95,13 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
     setShowDeletePostPopup(false);
   };
 
-  const handlePostDeletion = () =>{
+  const handlePostDeletion = () => {
     setShowDeletePostPopup(false);
     deletePost();
 
-      let postArray = [...sortedPostCatalog];
-      postArray = postArray.filter((removePost) => removePost.id !== postToDelete.id);
-      setSortedPostCatalog(postArray);
+    let postArray = [...sortedPostCatalog];
+    postArray = postArray.filter((removePost) => removePost.id !== postToDelete.id);
+    setSortedPostCatalog(postArray);
   }
 
   function DeletePostPopup() {
@@ -117,7 +121,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
     );
   }
 
- 
+
 
   useEffect(() => {
     fetch("http://localhost:8081/listPosts")
@@ -133,68 +137,97 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
       });
   }, []);
 
-  const listPosts = sortedPostCatalog.map((post, index) => {
 
+  const updateIndexNext = () => {
+    console.log("last prev val: " + previousIndex);
+    console.log("post length: " + userPosts.length);
+    const nextIndex = previousIndex + 2;
+    if (nextIndex < userPosts.length) {
+      setPreviousIndex(nextIndex);
+      console.log("I was taken");
+      console.log("new prv val " + previousIndex);
+    }
+    else {
+      setPreviousIndex(0);
+    }
+  }
+
+  const updateIndexBack = () => {
+    if (previousIndex - 2 >= 0) {
+      setPreviousIndex(prevIndex => prevIndex - 2);
+    }
+    else {
+      setPreviousIndex(userPosts.length - 2);
+    }
+  }
+
+  useEffect(() => {
+    const getUserPosts = sortedPostCatalog.filter(post => !userProfile || post.userID === userProfile.id);
+    setUserPosts(getUserPosts);
+  }, [sortedPostCatalog, userProfile]);
+
+
+  // Grabs the pairs of 2 posts EX: 1,2 | 3,4 | 5,6.
+  const listPosts = userPosts.slice(previousIndex, previousIndex + 2).map((post, index) => {
+    const currentIndex = previousIndex + index;
+    console.log("prev index: " + previousIndex);
 
     const switchLeft = () => {
-      setSortedPostCatalog(prevCatalog => {
+      setUserPosts(prevCatalog => {
         //Copy of the postCatalog
         const updatedCatalog = [...prevCatalog];
         //index is what post you are looking at in the postCatalog
         //imgIndex is the index of the image array within the current post.
-        if (updatedCatalog[index].imgIndex === 0) {
-          updatedCatalog[index].imgIndex = updatedCatalog[index].imageUrl.length - 1;
+        if (updatedCatalog[currentIndex].imgIndex === 0) {
+          updatedCatalog[currentIndex].imgIndex = updatedCatalog[currentIndex].imageUrl.length - 1;
         }
         else {
-          updatedCatalog[index].imgIndex--;
+          updatedCatalog[currentIndex].imgIndex--;
         }
         return updatedCatalog;
       });
     };
-  
-  
+
+
     //Allows user to click through the photes by clicking the right button.
     const switchRight = () => {
-      setSortedPostCatalog(prevCatalog => {
+      setUserPosts(prevCatalog => {
         const updatedCatalog = [...prevCatalog];
-        if (updatedCatalog[index].imageUrl.length - 1 === updatedCatalog[index].imgIndex) {
-          updatedCatalog[index].imgIndex = 0;
+        if (updatedCatalog[currentIndex].imageUrl.length - 1 === updatedCatalog[currentIndex].imgIndex) {
+          updatedCatalog[currentIndex].imgIndex = 0;
         }
         else {
-          updatedCatalog[index].imgIndex++;
+          updatedCatalog[currentIndex].imgIndex++;
         }
         return updatedCatalog;
       });
     };
 
-    
 
-    if (!userProfile || post.userID === userProfile.id) {
-      console.log(post.id);
-      return (
-        <div className='posts-div-profile' key={index}>
-          <div className="card-profile">
+    return (
+      <div className='posts-div-profile' key={index}>
+        <div className="card-profile">
           <div className='close-button-profile-div'>
-              <img src="https://img.icons8.com/?size=48&id=13903&format=png" alt="Exit Button" onClick={() => confirmDeletePost(post)} className='close-button-profile' />
-            </div>
-            {post.imageUrl && post.imageUrl.length > 0 && (
-              <img className="bd-placeholder-img card-img-top" height="225" src={post.imageUrl[post.imgIndex]} alt={post.title} />
-            )}
-             <div>
-                  <img src="https://img.icons8.com/?size=48&id=19175&format=png" alt="Left Arrow" onClick={switchLeft} className='img-arrow1' />
-                  <img src='https://img.icons8.com/?size=48&id=19175&format=png' alt="Right Arrow" onClick={switchRight} className='img-arrow2' />
-                </div>
-            <div className="card-body">
-              <p className="card-price">${parseFloat(post.price).toLocaleString()}</p>
-              <p className="title-post">{post.title}</p>
-              <p className="title-post">Condition: {post.condition}</p>
+            <img src="https://img.icons8.com/?size=48&id=13903&format=png" alt="Exit Button" onClick={() => confirmDeletePost(post)} className='close-button-profile' />
+          </div>
+          {post.imageUrl && post.imageUrl.length > 0 && (
+            <img className="bd-placeholder-img card-img-top" height="225" src={post.imageUrl[post.imgIndex]} alt={post.title} />
+          )}
+          <div>
+            <img src="https://img.icons8.com/?size=48&id=19175&format=png" alt="Left Arrow" onClick={switchLeft} className='img-arrow1' />
+            <img src='https://img.icons8.com/?size=48&id=19175&format=png' alt="Right Arrow" onClick={switchRight} className='img-arrow2' />
+          </div>
+          <div className="card-body">
+            <p className="card-price">${parseFloat(post.price).toLocaleString()}</p>
+            <p className="title-post">{post.title}</p>
+            <p className="title-post">Condition: {post.condition}</p>
 
-            </div>
           </div>
         </div>
-      );
-    }
+      </div>
+    );
   });
+
 
 
 
@@ -232,7 +265,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
             <div className="card-body">
               <div className="mb-3">
                 <label htmlFor="profilePicture" className="form-label">
-                 
+
                 </label>
                 {isEditMode ? (
                   <>
@@ -258,7 +291,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
                     src={tempProfile.profilePicture}
                     alt="Profile"
                     className="img-fluid"
-                    style={{ borderRadius: '50%', width: '150px', height: '150px' , border: 'solid 3px'}}
+                    style={{ borderRadius: '50%', width: '150px', height: '150px', border: 'solid 3px' }}
                   />
                 )}
               </div>
@@ -376,19 +409,27 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
                 </button>
               </div>
             )}
-                  <br></br>
+            <br></br>
 
           </div>
         </div>
         <div className="col-md-6">
-          <h1 className='current-posts-h1'>Current Posts</h1>
-        <div className='row'>
-          {listPosts}
-        </div>
+          <div className='card'>
+            <h1 className='current-posts-h1'>Current Posts</h1>
+            <div className='row'>
+
+              {listPosts}
+            </div>
+
+            <div className='next-back-buttons'>
+              <button className='back-posts-button' onClick={updateIndexBack}>Back</button>
+              <button className='next-posts-button' onClick={updateIndexNext}>Next</button>
+            </div>
+          </div>
         </div>
       </div>
       {showDeletePopup && <DeletePopup />}
-      {showDeletePostPopup && <DeletePostPopup/>}
+      {showDeletePostPopup && <DeletePostPopup />}
       <br></br>
     </div>
   );

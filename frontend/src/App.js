@@ -135,17 +135,17 @@ function App() {
           <form onSubmit={handleSubmit(onSignIn)} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* Form fields */}
             <div className="col-md-12">
-              <label htmlFor="email" className="form-label">Email</label>
+              
               <input {...register("email", { required: true })} type="email" className="form-control" id="email" placeholder="Email" />
               {errors.email && <p className="text-danger">Email is required.</p>}
             </div>
             <div className="col-md-12">
-              <label htmlFor="Password" className="form-label">Password</label>
-              <input {...register("password", { required: true })} type="password" className="form-control" id="password" placeholder="Password" />
+             
+              <input {...register("password", { required: true })} type="password" className="form-control" style={{ marginBottom: '30px' }} id="password" placeholder="Password" />
               {errors.password && <p className="text-danger">Password is required</p>}
             </div>
             {loginError && <p className="text-danger">{loginError}</p>}
-            <button type="submit">Sign In</button>
+            <button className="close-btn" type="submit">Sign In</button>
             <button className="close-btn" onClick={toggleSignInPopup}>Close</button>
             <button className="close-btn" onClick={toggleSignUpPopup}>Sign Up</button>
           </form>
@@ -183,8 +183,8 @@ function App() {
     };
 
     return (
-      <div className="popup">
-        <div className="popup-content">
+      <div className="popup-signup">
+        <div className="popup-content-signup">
           <h2>Create an Account</h2>
           {/* Sign-up form */}
           <form onSubmit={handleSubmit(onCreateAccount)} className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -195,27 +195,27 @@ function App() {
               {profileImage && <img src={profileImage} alt="Profile" className="profile-preview" />}
             </div>
             <div className="col-md-12">
-              <label htmlFor="fullName" className="form-label">Full Name</label>
+              
               <input {...register("fullName", { required: true })} type="text" className="form-control" id="fullName" placeholder="Full Name" />
               {errors.fullName && <p className="text-danger">Full Name is required.</p>}
             </div>
             <div className="col-md-12">
-              <label htmlFor="email" className="form-label">Email</label>
+              
               <input {...register("email", { required: true, pattern: /^\S+@\S+$/i })} type="email" className="form-control" id="email" placeholder="Email" />
               {errors.email && <p className="text-danger">Email is required.</p>}
             </div>
             <div className="col-md-12">
-              <label htmlFor="address" className="form-label">Address</label>
+             
               <input {...register("address", { required: true })} type="text" className="form-control" id="address" placeholder="Address" />
               {errors.address && <p className="text-danger">Address is required.</p>}
             </div>
             <div className="col-md-12">
-              <label htmlFor="Password" className="form-label">Password</label>
+              
               <input {...register("password", { required: true, validate: validatePassword })} type="password" className="form-control" id="password" placeholder="Password" />
               {errors.password && <p className="text-danger">Password must be at least 6 characters long and contain at least one letter and one number</p>}
             </div>
-            <button type="submit">Create Account</button>
-            <button className="close-btn" onClick={toggleSignInPopup}>Back</button>
+            <button className="create-account-btn" type="submit">Create</button>
+            <button className="create-account-btn" onClick={toggleSignInPopup}>Back</button>
           </form>
         </div>
       </div>
@@ -240,57 +240,65 @@ function App() {
           <img src="./logo.png" alt="MarketPal Logo" style={{ width: '40px', height: 'auto' }} />
         </div>
         <nav className="navbar">
-          
+
           <div className="nav-buttons">
-            <button className={activePage === 'browse' ? 'active' : ''} onClick={() => handlePageChange('browse')}>
-              <FaHome /> Browse
-            </button>
-            <button className={activePage === 'profile' ? 'active' : ''} onClick={() => handlePageChange('profile')}>
-              <FaUser /> Profile
-            </button>
-            <button className={activePage === 'messages' ? 'active' : ''} onClick={() => handlePageChange('messages')}>
-              <FaEnvelope /> Messages
-            </button>
-            <button className={activePage === 'create_post' ? 'active' : ''} onClick={() => handlePageChange('create_post')}>
-              <FaPlus /> Create Post
-            </button>
+            <div className='nav-buttons-main'>
+              <button className={activePage === 'browse' ? 'active' : ''} onClick={() => handlePageChange('browse')}>
+                <FaHome /> Browse
+              </button>
+              <button className={activePage === 'profile' ? 'active' : ''} onClick={() => handlePageChange('profile')}>
+                <FaUser /> Profile
+              </button>
+              <button className={activePage === 'messages' ? 'active' : ''} onClick={() => handlePageChange('messages')}>
+                <FaEnvelope /> Messages
+              </button>
+              <button className={activePage === 'create_post' ? 'active' : ''} onClick={() => handlePageChange('create_post')}>
+                <FaPlus /> Create Post
+              </button>
+            </div>
+
+          </div>
+        </nav>
+        <div className='nav-right'>
+          <div className='nav-button-signout'>
             <button type="button" className="nav-link" onClick={handleSignInOut}>
               {isSignedIn ? <FaSignInAlt /> : <FaSignOutAlt />} {isSignedIn ? 'Sign Out' : 'Sign In'}
             </button>
           </div>
-        </nav>
-
-        {isSignedIn && (
-        <div className="profile-section">
-          <div className="profile-picture">
-            <img src={userProfile.profilePicture} alt="Profile" style={{ width: '40px', height: '40px', borderRadius: '25%' }} />
+          <div>
+            {isSignedIn && (
+              <div className="profile-section">
+                <div className="profile-picture">
+                  <img src={userProfile.profilePicture} alt="Profile" style={{ width: '40px', height: '40px', borderRadius: '25%' }} />
+                </div>
+                <div className="user-name">{userProfile.fullName}</div>
+              </div>
+            )}
           </div>
-          <div className="user-name">{userProfile.fullName}</div>
         </div>
-      )}
       </header>
     );
   }
 
-  function Footer() {
-    return (
-      <footer className="footer">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6">
-              <h4>About Us</h4>
-              <p>Place some information about your website or company here.</p>
-            </div>
-            <div className="col-md-6">
-              <h4>Contact Us</h4>
-              <p>Email: example@example.com</p>
-              <p>Phone: +1234567890</p>
-            </div>
-          </div>
-        </div>
-      </footer>
-    );
-  }
+  // function Footer() {
+  //   return (
+  //     <footer className="footer">
+  //       <div className="container">
+  //         <div className="row">
+  //           <div className="col-md-6">
+  //             <h4>About Us</h4>
+  //             <p>Place some information about your website or company here.</p>
+  //           </div>
+  //           <div className="col-md-6">
+  //             <h4>Contact Us</h4>
+  //             <p>Email: example@example.com</p>
+  //             <p>Phone: +1234567890</p>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </footer>
+  //   );
+  // }
 
   return (
     <div className="App">
@@ -298,12 +306,12 @@ function App() {
 
       {(signInPopup) && <SignIn />}
       {(signUpPopup) && <SignUp />}
-      {(activePage === 'browse') && <Browse userProfile={userProfile}/>}
-      {(activePage === 'profile') && <Profile userProfile={userProfile} onDeleteProfile={handleDeleteProfile} onUpdateProfile={handleUpdateProfile}/>}
-      {(activePage === 'messages') && <Messages userProfile={userProfile}/>}
-      {(activePage === 'create_post') && <CreatePost userProfile={userProfile}/>}
+      {(activePage === 'browse') && <Browse userProfile={userProfile} />}
+      {(activePage === 'profile') && <Profile userProfile={userProfile} onDeleteProfile={handleDeleteProfile} onUpdateProfile={handleUpdateProfile} />}
+      {(activePage === 'messages') && <Messages userProfile={userProfile} />}
+      {(activePage === 'create_post') && <CreatePost userProfile={userProfile} />}
 
-      <Footer />
+      {/* <Footer /> */}
 
     </div>
   );

@@ -168,7 +168,7 @@ function Browse({ userProfile, onMessageClick }) {
 
               <div className='bottom-preview'>
                 <div className='bottom-preview-right'>
-                <button onClick={() => onMessageClick(post.userID)}>Message</button>
+                <button className="Message-button" onClick={() => onMessageClick(post.userID)}>Message</button>
 
                 </div>
               </div>

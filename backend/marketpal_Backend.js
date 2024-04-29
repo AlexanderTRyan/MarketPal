@@ -141,8 +141,26 @@ app.delete("/profile/:id", async (req, res) => {
     try {
         const id = Number(req.params.id);
         await client.connect();
+
+        const conversations = await db.collection("messages").find({}).toArray();
+
         console.log("Profile to delete :", id);
         const query = { id: id };
+
+
+        for (const conversation of conversations) {
+            // Check if the user to be deleted is present in the conversation
+            const userIndex = conversation.users.findIndex(user => user.id === id);
+            if (userIndex !== -1) {
+                // Update the conversation in the 'messages' collection
+                await db.collection("messages").deleteOne({ id: conversation.id });
+            }
+        }
+
+        
+        await db.collection("Posts").deleteMany({userID: id});
+        
+
         // delete
         const profileDeleted = await db.collection("profiles").deleteOne(query);
 
@@ -262,32 +280,72 @@ const sendConversations = async (ws, userId) => {
 const updateConversation = async (message, convId) => {
     const client = new MongoClient(url);
     try {
-      await client.connect();
-      const query = { id: convId };
-  
-      const updateOperation = {
-        $push: {
-          messages: message
+        await client.connect();
+        const query = { id: convId };
+
+        // Generate a unique ID for the new message
+        const messageId = generateUniqueMessageId();
+
+        // Add the unique ID to the message
+        const messageWithId = { ...message, id: messageId };
+
+        const updateOperation = {
+            $push: {
+                messages: messageWithId
+            }
+        };
+
+        const result = await client.db(dbName).collection("messages").updateOne(query, updateOperation);
+
+        if (result.modifiedCount === 0) {
+            console.log("No conversation found with ID:", convId);
+        } else {
+            console.log("Message added to conversation with ID:", convId);
         }
-      };
-  
-      const result = await client.db(dbName).collection("messages").updateOne(query, updateOperation);
-  
-      if (result.modifiedCount === 0) {
-        console.log("No conversation found with ID:", convId);
-      } else {
-        console.log("Message added to conversation with ID:", convId);
-      }
-  
-      return result;
+
+        return result;
     } catch (error) {
-      console.error("Error updating conversation:", error);
-      return null; // Return null or handle the error as appropriate
+        console.error("Error updating conversation:", error);
+        return null; // Return null or handle the error as appropriate
     } finally {
-      // Close the database connection
-      await client.close();
+        // Close the database connection
+        await client.close();
     }
-  };
+};
+
+
+// Function to update the read status of a message in the database
+const updateMessageReadStatus = async (messageId, readStatus) => {
+    const client = new MongoClient(url);
+    try {
+        await client.connect();
+
+        // Iterate through conversations
+        const conversations = await db.collection("messages").find({}).toArray();
+        for (const conversation of conversations) {
+            // Find the message with the corresponding ID
+            const messageIndex = conversation.messages.findIndex(message => message.id === messageId);
+            if (messageIndex !== -1) {
+                // Update the read status of the message
+                conversation.messages[messageIndex].read = readStatus;
+                console.log(conversation.messages[messageIndex]);
+                // Update the conversation in the database
+                await db.collection("messages").updateOne({ id: conversation.id }, { $set: { messages: conversation.messages } });
+
+                console.log("Message read status updated:", messageId);
+                return; // Exit the loop once the message is found and updated
+            }
+        }
+
+        // If the message ID is not found in any conversation
+        console.log("Message not found:", messageId);
+    } catch (error) {
+        console.error("Error updating message read status:", error);
+    } finally {
+        await client.close();
+    }
+};
+
 
 // WebSocket server event listeners
 wss.on('connection', (ws, req) => {
@@ -313,30 +371,40 @@ wss.on('connection', (ws, req) => {
         const parsedMessage = JSON.parse(message);
         console.log(parsedMessage);
 
-        updateConversation(parsedMessage.message, parsedMessage.conversationId);
+        if (parsedMessage.type === 'view') {
+            updateMessageReadStatus(parsedMessage.message.id, parsedMessage.message.read);
+        } else if (parsedMessage.type === 'message') {
 
-        const conversation = await db.collection('messages').findOne({ id: parsedMessage.conversationId });
-        console.log(conversation);
-        if (!conversation) {
-            console.log('Conversation not found');
-            return;
+            updateConversation(parsedMessage.message, parsedMessage.conversationId);
+
+            const conversation = await db.collection('messages').findOne({ id: parsedMessage.conversationId });
+            if (!conversation) {
+                console.log('Conversation not found');
+                return;
+            }
+
+            const recipient = conversation.users.find(user => user.name !== parsedMessage.message.sender);
+            if (!recipient) {
+                console.log('Recipient not found');
+                return;
+            }
+
+            const recipientWs = clients.find(client => client.userId === recipient.id);
+            if (!recipientWs) {
+                console.log('Recipient WebSocket not connected');
+                return;
+            }
+
+            recipientWs.send(JSON.stringify({ type: 'message', data: parsedMessage.message }));
+        } else if (parsedMessage.type === 'delete') {
+            const id = parsedMessage.conversationId;
+            console.log("Conversation to delete :", id);
+            const query = { id: id };
+
+            const convDeleted = await db.collection("messages").deleteOne(query);
+            console.log(convDeleted);
+
         }
-        console.log(conversation.users);
-
-        const recipient = conversation.users.find(user => user.name !== parsedMessage.message.sender);
-        console.log(recipient);
-        if (!recipient) {
-            console.log('Recipient not found');
-            return;
-        }
-
-        const recipientWs = clients.find(client => client.userId === recipient.id);
-        if (!recipientWs) {
-            console.log('Recipient WebSocket not connected');
-            return;
-        }
-
-        recipientWs.send(JSON.stringify({ type: 'message', data: parsedMessage.message }));
 
         // Broadcast the received message to all clients
         // wss.clients.forEach((client) => {
@@ -358,6 +426,8 @@ wss.on('connection', (ws, req) => {
     });
 });
 
+
+
 app.get("/listPosts", async (req, res) => {
     await client.connect();
     console.log("Node connected successfully to GET MongoDB");
@@ -367,9 +437,29 @@ app.get("/listPosts", async (req, res) => {
         .find(query)
         .limit(100)
         .toArray();
-    console.log(results);
+    //console.log(results);
     res.status(200);
     res.send(results);
+});
+
+app.get("/listPost/:userid", async (req, res) => {
+    try {
+        await client.connect();
+        const userId = parseInt(req.params.userid);
+
+        // Find all posts by the specified user
+        const query = { userID: userId };
+        const results = await db
+            .collection("Posts")
+            .find(query)
+            .toArray();
+
+        // Send the results back to the client
+        res.status(200).send(results);
+    } catch (error) {
+        console.error("An error occurred:", error);
+        res.status(500).send({ error: 'An internal server error occurred' });
+    }
 });
 
 app.post("/addPost", async (req, res) => {
@@ -403,7 +493,7 @@ app.post("/addPost", async (req, res) => {
                 "condition": req.body.condition,
                 "imageUrl": req.body.imageUrl
             };
-            console.log(newPost);
+           // console.log(newPost);
     
             const results = await db
                 .collection("Posts")
@@ -436,3 +526,88 @@ app.post("/addPost", async (req, res) => {
             res.status(500).send({ message: 'Internal Server Error' });
         }
     });
+const generateUniqueMessageId = () => {
+    // Generate a unique ID using a timestamp and a random number
+    return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+};
+
+app.delete("/post/:id", async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const query = { id: id };
+        await client.connect();
+        console.log(id);
+
+        // delete
+        const postDeleted = await db.collection("Posts").deleteOne(query);
+
+        res.status(200).send({
+            message: "Post Deleted successfully",
+            post: postDeleted,
+        });
+    }
+    catch (error) {
+        console.error("Error deleting post:", error);
+        res.status(500).send({ message: 'Internal Server Error' });
+    }
+});
+
+app.post("/message", async (req, res) => {
+    try {
+        await client.connect();
+
+        const query = {};
+        const conversations = await db
+            .collection("messages")
+            .find(query)
+            .toArray();
+
+        let maxId = 0;
+        conversations.forEach(post => {
+            if (post.id > maxId) {
+                maxId = post.id;
+            }
+        });
+
+        // Generate a new unique ID
+        const newPostId = maxId + 1;
+
+        const user1 = await db.collection("profiles").findOne({ id: parseInt(req.body.userID1) });
+        const user2 = await db.collection("profiles").findOne({ id: parseInt(req.body.userID2) });
+
+        console.log(req.body.userID1)
+        console.log(user2)
+        if (!user1 || !user2) {
+            return res.status(404).send({ error: "One or both users not found" });
+        }
+
+        const newUsers = [
+            {
+                id: user1.id,
+                name: user1.fullName
+            },
+            {
+                id: user2.id,
+                name: user2.fullName
+            }
+        ];
+
+        
+
+        const newPost = {
+            "id": newPostId,
+            "users": newUsers,
+            "messages": []
+        };
+       // console.log(newPost);
+
+        const results = await db
+            .collection("messages")
+            .insertOne(newPost);
+        res.status(200).send({results: results, message: "success"});
+        
+    } catch (error) {
+        console.error("An error occurred:", error);
+        res.status(500).send({ error: 'An internal server error occurred' });
+    }
+});

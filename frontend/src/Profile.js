@@ -3,13 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { get, useForm } from 'react-hook-form';
 import { FaEdit, FaSave, FaTimes, FaTrash } from 'react-icons/fa';
 
-function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
+function Profile({ userProfile, onDeleteProfile, onUpdateProfile, onDeletePost }) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [isEditMode, setIsEditMode] = useState(false);
   const [tempProfile, setTempProfile] = useState(userProfile);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [showDeletePostPopup, setShowDeletePostPopup] = useState(false);
-  const [tempIndex, setTempIndex] = useState('');
+  
   const [previousIndex, setPreviousIndex] = useState(0);
   const [userPosts, setUserPosts] = useState([]);
 
@@ -249,6 +249,8 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
     );
   }
 
+
+ 
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
@@ -431,8 +433,10 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile }) {
       {showDeletePopup && <DeletePopup />}
       {showDeletePostPopup && <DeletePostPopup />}
       <br></br>
+     
     </div>
   );
+
 }
 
 export default Profile;

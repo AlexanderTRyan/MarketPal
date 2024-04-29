@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 
-function Browse({ userProfile }) {
+function Browse({ userProfile, onMessageClick }) {
 
 
 
@@ -168,7 +168,8 @@ function Browse({ userProfile }) {
 
               <div className='bottom-preview'>
                 <div className='bottom-preview-right'>
-                  <button className='Message-button'>Message</button>
+                <button onClick={() => onMessageClick(post.userID)}>Message</button>
+
                 </div>
               </div>
             </div>

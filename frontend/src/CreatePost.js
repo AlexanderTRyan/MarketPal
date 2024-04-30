@@ -15,11 +15,30 @@ function CreatePost({ userProfile }) {
   const fileInputRef = useRef(null);
 
   const handleitemImageChange = (e) => {
-    const files = e.target.files;
-    if (files) {
-      const urls = Array.from(files).map(file => URL.createObjectURL(file));
-      setItemImages(prevImages => [...prevImages, ...urls]);
-    }
+    const files = Array.from(e.target.files); // Convert FileList to Array
+  
+    // Map over each file to read and handle them individually
+    Promise.all(files.map(file => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+  
+        reader.onload = () => {
+          resolve(reader.result); // Resolve with the result when reading is done
+        };
+  
+        reader.onerror = reject; // Reject in case of error
+  
+        reader.readAsDataURL(file);
+      });
+    }))
+    .then(images => {
+      // 'images' is an array containing base64 data of all the selected images
+      setItemImages(images);
+    })
+    .catch(error => {
+      // Handle any errors that occurred during reading
+      console.error('Error reading files:', error);
+    });
   };
 
 
@@ -125,28 +144,28 @@ function CreatePost({ userProfile }) {
 
         <div className="select-container">
           <select id="dropdownInput" name="dropdownInput" defaultValue="" onChange={handleCategory}>
-            <option value="" disabled selected hidden>Category</option>
-            <option value="Antiques">Antiques & Collectibles</option>
-            <option value="Arts">Arts & Crafts</option>
-            <option value="AutoParts">Auto Parts & Accessories</option>
-            <option value="BabyProducts">Baby Products</option>
-            <option value="BooksMovies">Books, Movies & Music</option>
-            <option value="CellPhones">Cell Phones & Accessories</option>
-            <option value="Clothing">Clothing, Shoes, & Accessories</option>
-            <option value="Electronincs">Electronincs</option>
+            <option value="" disabled hidden>Select a category</option>
+            <option value="Antiques & Collectibles">Antiques & Collectibles</option>
+            <option value="Arts & Crafts">Arts & Crafts</option>
+            <option value="Auto Parts & Accessories">Auto Parts & Accessories</option>
+            <option value="Baby Products">Baby Products</option>
+            <option value="Books, Movies & Music">Books, Movies & Music</option>
+            <option value="Cell Phones & Accessories">Cell Phones & Accessories</option>
+            <option value="Clothing, Shoes, & Accessories">Clothing, Shoes, & Accessories</option>
+            <option value="Electronics">Electronics</option>
             <option value="Furniture">Furniture</option>
-            <option value="HealthBeauty">Health & Beauty</option>
-            <option value="HomeKitchen">Home & Kitchen</option>
-            <option value="Jewerly">Jewerly & Watches</option>
-            <option value="Musical">Musical Instruments</option>
-            <option value="Office">Office Supplies</option>
-            <option value="Pet">Pet Supplies</option>
-            <option value="Patio">Patio & Garden</option>
-            <option value="SportingGoods">Sporting Goods</option>
-            <option value="Tools">Tools & Home Improvement</option>
-            <option value="Toys">Toys & Games</option>
-            <option value="Travel">Travel & Luggage</option>
-            <option value="Miscellenous">Miscellenous</option>
+            <option value="Health & Beauty">Health & Beauty</option>
+            <option value="Home & Kitchen">Home & Kitchen</option>
+            <option value="Jewelry & Watches">Jewelry & Watches</option>
+            <option value="Musical Instruments">Musical Instruments</option>
+            <option value="Office Supplies">Office Supplies</option>
+            <option value="Pet Supplies">Pet Supplies</option>
+            <option value="Patio & Garden">Patio & Garden</option>
+            <option value="Sporting Goods">Sporting Goods</option>
+            <option value="Tools & Home Improvement">Tools & Home Improvement</option>
+            <option value="Toys & Games">Toys & Games</option>
+            <option value="Travel & Luggage">Travel & Luggage</option>
+            <option value="Miscellaneous">Miscellaneous</option>
           </select>
         </div>
 

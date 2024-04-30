@@ -3,6 +3,8 @@ var cors = require("cors");
 var app = express();
 var fs = require("fs");
 var bodyParser = require("body-parser");
+app.use(express.json({ extended: false, limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: false, parameterLimit: 50000 }));
 app.use(cors());
 app.use(bodyParser.json());
 const port = "8081";
@@ -13,8 +15,7 @@ app.listen(port, () => {
 
 
 // Configure body-parser with extended option and increased limit
-app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+
 
 const { MongoClient } = require("mongodb");
 

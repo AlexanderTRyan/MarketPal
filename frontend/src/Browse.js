@@ -92,36 +92,19 @@ function Browse({ userProfile, onMessageClick }) {
   function PostPopup({ post, index }) {
 
     //This allwos the user to click the left arrow and flip through the images.
-    const switchLeft = () => {
-      setSortedPostCatalog(prevCatalog => {
-        //Copy of the postCatalog
-        const updatedCatalog = [...prevCatalog];
-        //index is what post you are looking at in the postCatalog
-        //imgIndex is the index of the image array within the current post.
-        if (updatedCatalog[index].imgIndex === 0) {
-          updatedCatalog[index].imgIndex = updatedCatalog[index].imageUrl.length - 1;
-        }
-        else {
-          updatedCatalog[index].imgIndex--;
-        }
-        return updatedCatalog;
-      });
-    };
+    const [imgIndex, setImgIndex] = useState(0); // Initialize imgIndex as a state
 
+    //if the imgIndex is 0 then it loops to the last index. Else it just does imgIndex - 1
+  const switchLeft = () => {
+    const newIndex = imgIndex === 0 ? post.imageUrl.length - 1 : imgIndex - 1;
+    setImgIndex(newIndex); // Update imgIndex state
+  };
 
-    //Allows user to click through the photes by clicking the right button.
-    const switchRight = () => {
-      setSortedPostCatalog(prevCatalog => {
-        const updatedCatalog = [...prevCatalog];
-        if (updatedCatalog[index].imageUrl.length - 1 === updatedCatalog[index].imgIndex) {
-          updatedCatalog[index].imgIndex = 0;
-        }
-        else {
-          updatedCatalog[index].imgIndex++;
-        }
-        return updatedCatalog;
-      });
-    };
+  //Checks if the img index is at the last position if it is then it loops to beginning 0. Else it just adds imgIndex + 1
+  const switchRight = () => {
+    const newIndex = imgIndex === post.imageUrl.length - 1 ? 0 : imgIndex + 1;
+    setImgIndex(newIndex); // Update imgIndex state
+  };
 
 
     //Returns the popup and the content from the post. 
@@ -136,9 +119,12 @@ function Browse({ userProfile, onMessageClick }) {
           <div className="preview-div-browse">
             <div>
               <div className='img-preview-div-popup'>
+              {console.log("Image URLs:", post.imageUrl)}
+              {console.log("Current imgIndex:", post.imgIndex)}
                 {post.imageUrl && post.imageUrl.length > 0 && (
-                  <img className="bd-placeholder-img card-img-top max-width" height="225" src={post.imageUrl[post.imgIndex]} alt={post.title} />
+                  <img className="bd-placeholder-img card-img-top max-width" height="225" src={post.imageUrl[imgIndex]} alt={post.title} />
                 )}
+                
                 <div>
                   <img src="https://img.icons8.com/?size=48&id=19175&format=png" alt="Left Arrow" onClick={switchLeft} className='img-arrow1' />
                   <img src='https://img.icons8.com/?size=48&id=19175&format=png' alt="Right Arrow" onClick={switchRight} className='img-arrow2' />
@@ -183,6 +169,7 @@ function Browse({ userProfile, onMessageClick }) {
 
   //This is the overall list of posts that are displayed on the browse screen.
   const listPosts = sortedPostCatalog.map((post, index) => {
+    console.log(sortedPostCatalog);
     if (!userProfile || post.userID !== userProfile.id) {
       return (
         <div className='posts-div' key={index} onClick={() => handlePostClick(post, index)}>

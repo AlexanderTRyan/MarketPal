@@ -55,7 +55,7 @@
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 9999;
-  /* Adjust the z-index to ensure it appears above other content */
+  
 }
 
 .popup-signup {
@@ -70,19 +70,15 @@
   border: 1px solid #ccc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 9999;
-  /* Adjust the z-index to ensure it appears above other content */
+  
 }
 
 /* Profile picture preview */
 .profile-preview {
   width: 100px;
-  /* Adjust the width as needed */
   height: 100px;
-  /* Adjust the height as needed */
   border-radius: 50%;
-  /* Make it appear as a circle */
   object-fit: cover;
-  /* Maintain aspect ratio and cover the container */
 }
 
 /* Header styles */
@@ -90,28 +86,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* To evenly space the logo and nav links */
   background-color: #333;
   color: white;
   padding: 10px 20px;
 }
 
-
-
-/* Footer styles */
-.footer {
-  background-color: #333;
-  color: white;
-  padding: 20px;
-}
-
-.footer h4 {
-  color: white;
-}
-
-.footer p {
-  margin-bottom: 5px;
-}
 
 
 .titleInput {
@@ -176,33 +155,23 @@
 
 .select-container select option {
   padding: 10px;
-  /* Add padding for spacing */
   background-color: #f0f0f0;
-  /* Set background color for options */
   color: #333;
-  /* Set text color for options */
   font-size: 14px;
-  /* Set font size for options */
 }
 
 .select-container select option:hover {
   background-color: #d50202;
-  /* Set background color for options on hover */
 }
 
 .Item-preview {
   width: 80px;
-  /* Adjust the width as needed */
   height: 80px;
-  /* Adjust the height as needed */
   border-radius: 5%;
-  /* Make it appear as a circle */
   object-fit: cover;
-  /* Maintain aspect ratio and cover the container */
   display: flex;
   align-items: center;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  /* Add a subtle shadow */
   margin: 10px;
   margin-top: 20px;
 }
@@ -216,23 +185,16 @@
   margin-bottom: 10px;
   margin-left: 10px;
   background-color: #cdd4da;
-  /* Button background color */
   color: black;
-  /* Button text color */
   padding: 10px 20px;
-  /* Button padding */
   border: none;
-  /* Remove button border */
   border-radius: 5px;
-  /* Button border radius */
   cursor: pointer;
-  /* Change cursor to pointer on hover */
   border: solid black 1px;
 }
 
 .custom-file-button:hover {
   background-color: #0056b3;
-  /* Change background color on hover */
 }
 
 .hidden {
@@ -241,9 +203,7 @@
 
 .imageGrid {
   display: grid;
-  /* Use CSS grid layout */
   grid-template-columns: repeat(2, minmax(200px, 1fr));
-  /* Auto-fit columns with minimum width of 200px */
 
 }
 
@@ -256,9 +216,7 @@
 .Create-Post {
   display: grid;
   grid-template-columns: 1fr 4fr;
-  /* Adjust column widths as needed */
   grid-gap: 20px;
-  /* Adjust the gap between sections as needed */
 }
 
 .preview-img {
@@ -271,12 +229,9 @@
 
   display: flex;
   justify-content: center;
-  /* Horizontally center the content */
   border-left: solid;
-  /* Remove button border */
   border-radius: 5px;
   border-color: #EAEAEA;
-  /* Button border radius */
   height: 800px;
   width: 100%;
   background-color: #F0F2F5;
@@ -286,13 +241,9 @@
 .preview-div-browse {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  /* Adjust column widths as needed */
-
   border: solid;
-  /* Remove button border */
   border-radius: 5px;
   border-color: #EAEAEA;
-  /* Button border radius */
   height: 550px;
   width: 750px;
   background-color: #FFFF;
@@ -304,12 +255,8 @@
 .preview-div {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  /* Adjust column widths as needed */
-
   border: solid;
-  /* Remove button border */
   border-radius: 2px;
-  /* Button border radius */
   height: 550px;
   width: 750px;
   background-color: #FFFF;
@@ -321,7 +268,6 @@
 .preview-header {
   display: flex;
   align-items: left;
-  /* Horizontally center the content */
   margin: 10px;
 }
 
@@ -333,11 +279,8 @@
 .img-preview-div {
   border: solid;
   border-color: #EAEAEA;
-  /* Remove button border */
   border-radius: 5px;
-  /* Button border radius */
   align-items: left;
-  /* Horizontally center the content */
   margin-left: 10px;
   margin-top: 25%;
   width: 80%;
@@ -349,23 +292,19 @@
 .preview-info {
   border-left: solid;
   border-color: #EAEAEA;
-  /* Remove button border */
   border-radius: 5px;
-  /* Button border radius */
   resize: none;
 }
 
 .preview-info-h1 {
   display: flex;
   align-items: left;
-  /* Horizontally center the content */
   margin: 10px;
 }
 
 .preview-info-h3 {
   display: flex;
   align-items: left;
-  /* Horizontally center the content */
   margin: 10px;
 }
 
@@ -378,7 +317,6 @@
   font-family: Arial, sans-serif;
   color: #333;
   max-width: 400px;
-  /* Adjust the maximum width as needed */
   word-break: break-word;
   white-space: pre-line;
 
@@ -419,23 +357,17 @@
 
 .seller-picture {
   width: 110px;
-  /* Set the width and height to create a square container */
   height: 110px;
   border-radius: 50%;
-  /* Make it a circle by setting border-radius to 50% */
   border: 5px solid #343232;
-  /* Add a border */
   overflow: hidden;
-  /* Ensure the image stays within the circular container */
   margin-top: 25px;
 }
 
 .seller-picture img {
   width: 100%;
-  /* Make the image fill the circular container */
   height: 100%;
   object-fit: cover;
-  /* Maintain aspect ratio and cover entire container */
 }
 
 .seller-info-pic {
@@ -450,15 +382,12 @@
   border: none;
   color: #333;
   font-size: 36px;
-  /* Adjust size as needed */
   cursor: pointer;
   padding: 10px;
-  /* Adjust padding as needed */
 }
 
 .arrow-button:hover {
   color: #007bff;
-  /* Change color on hover if desired */
 }
 
 .img-arrow1 {
@@ -485,22 +414,16 @@
   background-color: #1877f2;
   width: 130px;
   border-radius: 17px;
-  /* Increase border-radius for a smoother appearance */
   height: 40px;
   margin-top: 30px;
   border: none;
-  /* Remove border for a cleaner look */
   outline: none;
-  /* Remove outline when button is focused */
   cursor: pointer;
-  /* Change cursor to pointer on hover */
   transition: background-color 0.3s ease;
-  /* Add transition for smoother color change on hover */
 }
 
 .publish-button:hover {
   background-color: #135e96;
-  /* Darker color on hover */
 }
 
 
@@ -510,23 +433,18 @@
 .Browse {
   display: grid;
   grid-template-columns: 1fr 4fr;
-  /* Adjust column widths as needed */
   grid-gap: 20px;
-  /* Adjust the gap between sections as needed */
 }
 
 
 .middle-section-browse {
-
   background-color: #F0F2F5;
-
   overflow-y: auto;
 }
 
 
 .browse-title h1 {
   text-transform: capitalize;
-
 }
 
 
@@ -580,9 +498,7 @@ h1 em {
 .category-buttons {
   display: flex;
   align-items: center;
-  /* Align items vertically */
   justify-content: flex-start;
-  /* Align items to the start */
   margin: 10px;
   margin-top: 10px;
   color: black;
@@ -597,33 +513,25 @@ h1 em {
 
 .category-buttons:hover {
   background-color: #F0F2F5;
-  /* Change background color on hover */
 }
 
 .category-buttons img {
   flex-shrink: 0;
-  /* Prevent the image from shrinking */
   margin-right: 10px;
-  /* Add some space between the image and text */
   width: 35px;
   height: 35px;
 }
 
 .category-buttons span {
   overflow: hidden;
-  /* Hide overflowing text */
   text-overflow: ellipsis;
-  /* Add ellipsis (...) for overflowing text */
   white-space: nowrap;
-  /* Prevent text from wrapping */
 }
 
 .category-buttons-div {
   margin: 20px;
   height: 500px;
-  /* Set a fixed height for the div */
   overflow-y: auto;
-  /* Enable vertical scrollbar */
 }
 
 .category-buttons-header {
@@ -643,45 +551,34 @@ h1 em {
 
 .card{
   border: solid 1px #ccc;
-  /* Add a border to visually separate cards */
   border-radius: 8px;
-  /* Add rounded corners for a cleaner look */
   background-color: #fff;
-  /* Add a background color to the card */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Add a subtle shadow for depth */
   padding: 29px;
 }
 
 .card-browse{
   border: solid 1px #ccc;
-  /* Add a border to visually separate cards */
   border-radius: 8px;
-  /* Add rounded corners for a cleaner look */
   background-color: #fff;
-  /* Add a background color to the card */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Add a subtle shadow for depth */
   padding: 29px;
 }
 
 .card-browse:hover{
   transform: translateY(-5px);
-  /* Move the card slightly upwards on hover */
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  /* Add a stronger shadow to create a lifting effect */
 }
 
 .card-body {
   padding: 20px;
-  /* Add padding to the card body */
 }
 
 .title-post {
   display: flex;
   justify-content: left;
   font-family: "Raleway", sans-serif;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .card-price {
@@ -715,16 +612,11 @@ h1 em {
   height: 275px;
   overflow: auto;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  /* Box shadow for a raised effect */
   z-index: 9999;
   position: fixed;
-  /* or absolute, depending on your layout */
   top: 50%;
-  /* Adjust as needed */
   left: 50%;
-  /* Adjust as needed */
   transform: translate(-50%, -50%);
-  /* Center the popup */
 }
 
 .popup-content-signup {
@@ -732,23 +624,16 @@ h1 em {
   padding: 10px;
   border-radius: 8px;
   width: 350px;
-  
   overflow: auto;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  /* Box shadow for a raised effect */
   z-index: 9999;
   position: fixed;
-  /* or absolute, depending on your layout */
   top: 50%;
-  /* Adjust as needed */
   left: 50%;
-  /* Adjust as needed */
   transform: translate(-50%, -50%);
-  /* Center the popup */
 }
 
 .popup-content-browse{
- 
   background-color: #F0F2F5;
   padding: 10px;
   border-radius: 8px;
@@ -756,14 +641,10 @@ h1 em {
   height: 700px;
   overflow: auto;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  /* Box shadow for a raised effect */
   z-index: 9999;
   position: fixed;
-  /* or absolute, depending on your layout */
   top: 50%;
-  /* Adjust as needed */
   left: 50%;
-  /* Adjust as needed */
   transform: translate(-50%, -50%);
   margin: 20px;
   
@@ -775,13 +656,9 @@ h1 em {
 
 
 .img-preview-div-popup {
-
-  /* Button border radius */
   align-items: left;
-  /* Horizontally center the content */
   margin-left: 10px;
   margin-top: 150px;
-  
   width: 80%;
   height: 50%;
 }
@@ -798,9 +675,7 @@ h1 em {
 .preview-info2 {
   border-left: solid;
   border-color: #EAEAEA;
-  /* Remove button border */
   border-radius: 5px;
-  /* Button border radius */
   resize: none;
   position: relative;
 }
@@ -810,7 +685,6 @@ h1 em {
   display: flex;
   align-items: right;
   justify-content: right;
-
 }
 
 .close-button {
@@ -824,23 +698,16 @@ h1 em {
   width: 150px;
   border-radius: 30px;
   background-color: #49f04f;
-  /* Green color */
   color: white;
-  /* Text color */
   border: none;
-  /* Remove border */
   padding: 10px 20px;
-  /* Add padding */
   cursor: pointer;
-  /* Change cursor to pointer on hover */
   transition: background-color 0.3s;
-  /* Smooth transition for background color change */
 }
 
 
 .Message-button:hover {
   background-color: #45a049;
-  /* Darker shade of green on hover */
 }
 
 
@@ -881,11 +748,11 @@ h1 em {
 }
 
 .nav-button-signout button {
-  background-color: transparent; /* Set background color to transparent */
+  background-color: transparent; 
  
-  border: none; /* Remove border */
+  border: none; 
   cursor: pointer;
-  transition: color 0.3s, background-color 0.3s; /* Add transition for smooth color change */
+  transition: color 0.3s, background-color 0.3s; 
 }
 
 .nav-button-signout button:hover {
@@ -904,7 +771,6 @@ h1 em {
 
 .user-name {
   font-size: 16px;
-  /* Adjust font size as needed */
 }
 
 .posts-div-profile {
@@ -915,22 +781,22 @@ h1 em {
 
 .card-profile {
   border: solid 1px #ccc;
-  /* Add a border to visually separate cards */
   border-radius: 8px;
-  /* Add rounded corners for a cleaner look */
   background-color: #fff;
-  /* Add a background color to the card */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Add a subtle shadow for depth */
+}
+
+.current-post-div{
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 .current-posts-h1 {
   font-size: 28px;
   font-weight: bold;
   color: #333;
-  /* You can adjust the color as needed */
   margin-bottom: 20px;
-  /* Add some spacing below the heading */
 }
 
 .form-control{
@@ -982,12 +848,12 @@ h1 em {
 
 .next-posts-button,
 .back-posts-button {
-  background-color: #007bff; /* Blue background color */
-  color: #fff; /* White text color */
-  border: none; /* Remove border */
-  padding: 10px 20px; /* Add padding */
-  border-radius: 5px; /* Add rounded corners */
-  cursor: pointer; /* Add cursor pointer */
+  background-color: #007bff; 
+  color: #fff;
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 5px; 
+  cursor: pointer; 
   width: 100px;
   margin-right: 10px;
   margin-bottom: 5px;
@@ -997,13 +863,12 @@ h1 em {
 
 .next-posts-button:hover,
 .back-posts-button:hover {
-  background-color: #0056b3; /* Darker blue color on hover */
+  background-color: #0056b3; 
 }
 
 .next-back-buttons{
   display: grid;
   grid-template-columns: 1fr 1fr;
-  /* Adjust column widths as needed */
   grid-gap: 20px;
   place-items: center;
 }

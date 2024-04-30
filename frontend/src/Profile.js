@@ -9,7 +9,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile, onDeletePost }
   const [tempProfile, setTempProfile] = useState(userProfile);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [showDeletePostPopup, setShowDeletePostPopup] = useState(false);
-  
+ 
   const [previousIndex, setPreviousIndex] = useState(0);
   const [userPosts, setUserPosts] = useState([]);
 
@@ -141,7 +141,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile, onDeletePost }
   const updateIndexNext = () => {
     console.log("last prev val: " + previousIndex);
     console.log("post length: " + userPosts.length);
-    const nextIndex = previousIndex + 2;
+    const nextIndex = previousIndex + 1;
     if (nextIndex < userPosts.length) {
       setPreviousIndex(nextIndex);
       console.log("I was taken");
@@ -153,54 +153,35 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile, onDeletePost }
   }
 
   const updateIndexBack = () => {
-    if (previousIndex - 2 >= 0) {
-      setPreviousIndex(prevIndex => prevIndex - 2);
+    if (previousIndex - 1 >= 0) {
+      setPreviousIndex(prevIndex => prevIndex - 1);
     }
     else {
-      setPreviousIndex(userPosts.length - 2);
+      setPreviousIndex(userPosts.length - 1);
     }
   }
 
   useEffect(() => {
-    const getUserPosts = sortedPostCatalog.filter(post => !userProfile || post.userID === userProfile.id);
+    const getUserPosts = sortedPostCatalog.map(post => ({
+      ...post,
+      imgIndex: 0 // Set the imgIndex property for each post
+    })).filter(post => !userProfile || post.userID === userProfile.id);
     setUserPosts(getUserPosts);
   }, [sortedPostCatalog, userProfile]);
 
 
+  const [imgIndex, setImgIndex] = useState(0); // Initialize imgIndex as a state
   // Grabs the pairs of 2 posts EX: 1,2 | 3,4 | 5,6.
-  const listPosts = userPosts.slice(previousIndex, previousIndex + 2).map((post, index) => {
-    const currentIndex = previousIndex + index;
-    console.log("prev index: " + previousIndex);
-
+  const listPosts = userPosts.slice(previousIndex, previousIndex + 1).map((post, index) => {
+    
     const switchLeft = () => {
-      setUserPosts(prevCatalog => {
-        //Copy of the postCatalog
-        const updatedCatalog = [...prevCatalog];
-        //index is what post you are looking at in the postCatalog
-        //imgIndex is the index of the image array within the current post.
-        if (updatedCatalog[currentIndex].imgIndex === 0) {
-          updatedCatalog[currentIndex].imgIndex = updatedCatalog[currentIndex].imageUrl.length - 1;
-        }
-        else {
-          updatedCatalog[currentIndex].imgIndex--;
-        }
-        return updatedCatalog;
-      });
+      const newIndex = imgIndex === 0 ? post.imageUrl.length - 1 : imgIndex - 1;
+      setImgIndex(newIndex); // Update imgIndex state for the specific post
     };
-
-
-    //Allows user to click through the photes by clicking the right button.
+    
     const switchRight = () => {
-      setUserPosts(prevCatalog => {
-        const updatedCatalog = [...prevCatalog];
-        if (updatedCatalog[currentIndex].imageUrl.length - 1 === updatedCatalog[currentIndex].imgIndex) {
-          updatedCatalog[currentIndex].imgIndex = 0;
-        }
-        else {
-          updatedCatalog[currentIndex].imgIndex++;
-        }
-        return updatedCatalog;
-      });
+      const newIndex = imgIndex === post.imageUrl.length - 1 ? 0 : imgIndex + 1;
+      setImgIndex(newIndex); // Update imgIndex state for the specific post
     };
 
 
@@ -211,7 +192,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile, onDeletePost }
             <img src="https://img.icons8.com/?size=48&id=13903&format=png" alt="Exit Button" onClick={() => confirmDeletePost(post)} className='close-button-profile' />
           </div>
           {post.imageUrl && post.imageUrl.length > 0 && (
-            <img className="bd-placeholder-img card-img-top" height="225" src={post.imageUrl[post.imgIndex]} alt={post.title} />
+            <img className="bd-placeholder-img card-img-top" height="225" src={post.imageUrl[imgIndex]} alt={post.title} />
           )}
           <div>
             <img src="https://img.icons8.com/?size=48&id=19175&format=png" alt="Left Arrow" onClick={switchLeft} className='img-arrow1' />
@@ -418,7 +399,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile, onDeletePost }
         <div className="col-md-6">
           <div className='card'>
             <h1 className='current-posts-h1'>Current Posts</h1>
-            <div className='row'>
+            <div className='current-post-div'>
 
               {listPosts}
             </div>

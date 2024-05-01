@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { get, useForm } from 'react-hook-form';
 import { FaEdit, FaSave, FaTimes, FaTrash } from 'react-icons/fa';
@@ -106,7 +105,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile, onDeletePost }
 
   function DeletePostPopup() {
     return (
-      <div className="popup">
+      
         <div className="popup-content">
           <h2>Delete {postToDelete.title} Post</h2>
           <p>Are you sure you want to delete this post</p>
@@ -117,7 +116,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile, onDeletePost }
             Cancel
           </button>
         </div>
-      </div>
+     
     );
   }
 
@@ -215,7 +214,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile, onDeletePost }
 
   function DeletePopup() {
     return (
-      <div className="popup">
+      
         <div className="popup-content">
           <h2>Delete Profile</h2>
           <p>Are you sure you want to delete your profile?</p>
@@ -226,7 +225,7 @@ function Profile({ userProfile, onDeleteProfile, onUpdateProfile, onDeletePost }
             Cancel
           </button>
         </div>
-      </div>
+     
     );
   }
 

@@ -178,7 +178,7 @@ function App() {
     }
 
     return (
-      <div className="popup">
+      
         <div className="popup-content">
           <h2>Sign In</h2>
           {/* Sign-in form */}
@@ -202,7 +202,7 @@ function App() {
 
 
         </div>
-      </div>);
+      );
   }
 
   function SignUp() {
@@ -234,7 +234,7 @@ function App() {
 
 
     return (
-      <div className="popup-signup">
+      
         <div className="popup-content-signup">
           <h2>Create an Account</h2>
           {/* Sign-up form */}
@@ -269,7 +269,7 @@ function App() {
             <button className="create-account-btn" onClick={toggleSignInPopup}>Back</button>
           </form>
         </div>
-      </div>
+      
 
     );
   }
